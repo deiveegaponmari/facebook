@@ -1,0 +1,26 @@
+[{
+    "post": {
+      "user": {
+        "name": "Ente Veedu",
+        "profile_link": "#",
+        "follow": true
+      },
+      "timestamp": "5 days ago",
+      "content": {
+        "text": "House warming day ❤️",
+        "image": "house_warming.jpg"
+      },
+      "engagement": {
+        "likes": 17000,
+        "comments": 143,
+        "shares": 175
+      },
+      "actions": {
+        "like": true,
+        "comment": true,
+        "send": true,
+        "share": true
+      }
+    }
+  }
+  ]
