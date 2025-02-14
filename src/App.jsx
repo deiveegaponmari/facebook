@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import FaceBookPage from './pages/FaceBookPage';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   const { isLoggedIn } = useData();
@@ -33,6 +34,7 @@ function App() {
             </>
           }
            <Route path='/home' Component={mycomp}></Route>
+           <Route path='/profile' Component={ProfilePage}></Route>
           <Route path='*' Component={NotFound}></Route>
         </Routes>
       </div>

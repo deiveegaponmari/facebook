@@ -29,7 +29,7 @@ export default function PostModal({ open, handleClose }) {
                             {/* clear icon added */}
                             <Grid2>
                                 <ListItem>
-                                    <CloseIcon/>
+                                    <CloseIcon onClick={handleClose}/>
                                 </ListItem>
                             </Grid2>
                         </Grid2>
@@ -50,13 +50,13 @@ export default function PostModal({ open, handleClose }) {
                                     <UploadFile/> 
                                 </ListItem>
                             </Grid2>
-                            <Grid2>
+                             {/* <Grid2>
                                 <ListItem>
                                     <Button variant="standard" fullWidth>Add to your post
-                                      {/*   upload file icon component add here */}
+                                         upload file icon component add here *
                                     </Button>
                                 </ListItem>
-                            </Grid2>
+                            </Grid2> */} 
                             <Grid2>
                                 <ListItem>
                                     <Button variant="standard" fullWidth onClick={handlePost}>

@@ -59,9 +59,9 @@ export default function Navbar() {
                                 <Grid2>
                                     <Link to={"/home"}><HomeIcon color="primary" sx={{ fontSize: 40 }} /></Link>
                                 </Grid2>
-                                <Grid2>
+                              {/*   <Grid2>
                                     <PeopleOutlineIcon sx={{ fontSize: 40 }} />
-                                </Grid2>
+                                </Grid2> */}
                             </Grid2>
                             <Grid2 container gap={2} padding={1}>
                                 <Grid2>
@@ -95,7 +95,7 @@ export default function Navbar() {
                                     <NotificationsIcon sx={{ fontSize: 40 }} />
                                 </Grid2>
                                 <Grid2>
-                                    <AccountCircleIcon sx={{ fontSize: 40 }}  />
+                                    <Link to={"/profile"}><AccountCircleIcon sx={{ fontSize: 40 }}  /></Link>
                                 </Grid2>
                             </Grid2>
                         </Grid2>

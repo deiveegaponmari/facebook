@@ -34,7 +34,7 @@ export default function Story() {
                                     image={item.src}
                                     title="green iguana"
                                 />
-                                <CardContent>
+                            {/*     <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
                                         Lizard
                                     </Typography>
@@ -46,7 +46,7 @@ export default function Story() {
                                 <CardActions>
                                     <Button size="small">Share</Button>
                                     <Button size="small">Learn More</Button>
-                                </CardActions>
+                                </CardActions> */}
                             </>
                         ) : (
                             <CardMedia sx={{ height: 200 }}>
