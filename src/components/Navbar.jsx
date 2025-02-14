@@ -92,10 +92,10 @@ export default function Navbar() {
                                     )}
                                 </Grid2>
                                 <Grid2>
-                                    <NotificationsIcon sx={{ fontSize: 40 }} />
+                                    <NotificationsIcon sx={{ fontSize: 40 }} color="primary"/>
                                 </Grid2>
                                 <Grid2>
-                                    <Link to={"/profile"}><AccountCircleIcon sx={{ fontSize: 40 }}  /></Link>
+                                    <Link to={"/profile"}><AccountCircleIcon sx={{ fontSize: 40 }} color="primary" /></Link>
                                 </Grid2>
                             </Grid2>
                         </Grid2>
