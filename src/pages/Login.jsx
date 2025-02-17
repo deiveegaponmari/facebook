@@ -12,7 +12,7 @@ export default function Login() {
             password: password
         }
         console.log(payload)
-        fetch(`http://localhost:4000/user/signin`, {
+        fetch(`${process.env.REACT_APP_API_URL}/user/signin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

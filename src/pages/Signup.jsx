@@ -9,6 +9,8 @@ export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
     const navigate = useNavigate();
+   // const API_URL = process.env.REACT_APP_API_URL;
+//console.log("API URL:", API_URL);
     function saveData() {
         const payload = {
             firstName: firstName,
@@ -17,7 +19,7 @@ export default function Signup() {
             password: password
         }
         console.log(payload)
-        fetch('http://localhost:4000/user/signup', {
+        fetch(`${process.env.REACT_APP_API_URL}/user/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
