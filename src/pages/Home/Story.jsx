@@ -26,7 +26,7 @@ export default function Story() {
         <Grid2 container>
             <Grid2 container spacing={2} justifyContent={'center'} alignItems={"center"}>
                 {storyData.map((item, index) => {
-                    return <Card sx={{ maxWidth: 345 }}>
+                    return <Card sx={{ maxWidth: 345 }} key={index}>
                         {item.type === "image" ? (
                             <>
                                 <CardMedia

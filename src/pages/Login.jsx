@@ -12,7 +12,7 @@ export default function Login() {
             password: password
         }
         console.log(payload)
-        fetch(`${process.env.REACT_APP_API_URL}/user/signin`, {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/user/signin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

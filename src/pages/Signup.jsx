@@ -2,6 +2,7 @@ import { Grid2, ListItem, Typography, Box, Button, TextField } from "@mui/materi
 import { useNavigate,Link } from "react-router-dom";
 import { useState } from "react";
 import { Padding } from "@mui/icons-material";
+//import.meta.env.VITE_BACKEND_URL;
 
 export default function Signup() {
     const [firstName, setfirstName] = useState("")
@@ -19,7 +20,7 @@ export default function Signup() {
             password: password
         }
         console.log(payload)
-        fetch(`${process.env.REACT_APP_API_URL}/user/signup`, {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/user/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

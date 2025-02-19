@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-const socket = io("http://localhost:4000");
+//const socket = io(`${import.meta.env.VITE_BACKEND_URL}`);
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
+
 export default function Chat(){
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);

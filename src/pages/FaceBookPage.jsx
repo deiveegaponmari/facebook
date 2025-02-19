@@ -22,11 +22,11 @@ export default function FaceBookPage(){
         <Grid2 container width={"75%"}>
            <Grid2>
             <ListItem>
-              <CardUpload/></ListItem>
+               <CardUpload/> </ListItem>
            </Grid2>
            <Grid2>
             <ListItem>
-              <CardUpload/>
+             {/*  <CardUpload/> */}
             </ListItem>
            </Grid2>
         </Grid2>
