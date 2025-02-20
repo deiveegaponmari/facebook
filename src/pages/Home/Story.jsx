@@ -27,11 +27,11 @@ export default function Story() {
             <Grid2 container spacing={2} justifyContent={'center'} alignItems={"center"}>
                 {storyData.map((item, index) => {
                     return <Card sx={{ maxWidth: 345 }} key={index}>
-                        {item.type === "image" ? (
+                        {item.imageUrl ? (
                             <>
                                 <CardMedia
                                     sx={{ height: 140 }}
-                                    image={item.src}
+                                    image={item.imageUrl}
                                     title="green iguana"
                                 />
 
@@ -39,7 +39,7 @@ export default function Story() {
                         ) : (
                             <CardMedia sx={{ height: 200 }}>
                                 <ReactPlayer
-                                    url={item.src}
+                                    url={item.videoUrl}
                                     playing={false}
                                     controls={false}
                                     muted={false}

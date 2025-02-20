@@ -1,15 +1,18 @@
-import { Grid2, ListItem, Input, TextField, Autocomplete } from "@mui/material";
+import { Grid2, ListItem, Input, TextField, Autocomplete,Badge } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import HomeIcon from '@mui/icons-material/Home';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Link,useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import { useState,useEffect } from "react";
 import Chat from "./Chat";
+import io from "socket.io-client";
+
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 export default function Navbar() {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const [chatOpen, setChatOpen] = useState(false);
     const autoData = [
         { label: "vanitha" },
@@ -19,6 +22,19 @@ export default function Navbar() {
     function toggleChat() {
         setChatOpen(!chatOpen)
     }
+    const [notification, setNotification] = useState("");
+    const [showNotification, setShowNotification] = useState(false);
+
+    useEffect(() => {
+        socket.on("notification", (data) => {
+            setNotification(data.message);
+            setShowNotification(true);
+        });
+
+        return () => {
+            socket.off("notification");
+        };
+    }, []);
     return (
         <Grid2>
             <ListItem>
@@ -34,8 +50,8 @@ export default function Navbar() {
                                 </Grid2>
                                 <Grid2>
                                     <ListItem>
-                                        
-                                    <Autocomplete
+
+                                        <Autocomplete
                                             disablePortal
                                             options={autoData}
                                             sx={{ width: 300 }}
@@ -46,7 +62,7 @@ export default function Navbar() {
                                                 }
                                             }}
                                         />
-                                     
+
 
 
                                         {/* <FormControl variant="standard">
@@ -100,7 +116,28 @@ export default function Navbar() {
                                     )}
                                 </Grid2>
                                 <Grid2>
-                                    <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
+                                    <ListItem>
+                                        <Badge
+                                            color="error"
+                                            variant={showNotification ? "dot" : "standard"}
+                                            onClick={() => setShowNotification(false)}
+                                        >
+                                            <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
+                                        </Badge>
+                                        {showNotification && (
+                                            <div style={{
+                                                position: "absolute",
+                                                background: "white",
+                                                padding: "10px",
+                                                borderRadius: "5px",
+                                                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                                                top: "50px",
+                                                right: "10px",
+                                            }}>
+                                                {notification}
+                                            </div>
+                                        )}
+                                    </ListItem>
                                 </Grid2>
                                 <Grid2>
                                     <Link to={"/profile"}><AccountCircleIcon sx={{ fontSize: 40 }} color="primary" /></Link>
