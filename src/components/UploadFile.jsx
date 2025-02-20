@@ -20,11 +20,10 @@ export default function UploadFile() {
 
     // Prepare FormData
     const formData = new FormData();
-    formData.append("media", file);
+    formData.append("file", file);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/media/createmedia`,
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/media/createmedia`,
         {
           method: "POST",
           body: formData,

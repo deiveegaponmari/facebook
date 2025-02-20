@@ -15,7 +15,7 @@ export default function Story() {
     // const {storyReducer}=useSelector((state)=>state)
     const [storyData, setStoryData] = useState([])
     useEffect(() => {
-        axios.get("http://localhost:5173/stories.json")
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/media/getfile`)
             .then((response) => setStoryData(response.data))
             .catch((error) => {
                 console.log(error)
@@ -34,19 +34,7 @@ export default function Story() {
                                     image={item.src}
                                     title="green iguana"
                                 />
-                            {/*     <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        Lizard
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                        Lizards are a widespread group of squamate reptiles, with over 6,000
-                                        species, ranging across all continents except Antarctica
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button size="small">Share</Button>
-                                    <Button size="small">Learn More</Button>
-                                </CardActions> */}
+
                             </>
                         ) : (
                             <CardMedia sx={{ height: 200 }}>
