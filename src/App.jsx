@@ -10,7 +10,9 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import ProfilePage from './pages/ProfilePage';
 
+
 function App() {
+  
   const { isLoggedIn } = useData();
   const mycomp = () => {
     return (<Grid2>
@@ -31,10 +33,12 @@ function App() {
           {
             isLoggedIn && <>
              
+
             </>
           }
            <Route path='/home' Component={mycomp}></Route>
            <Route path='/profile' Component={ProfilePage}></Route>
+           
           <Route path='*' Component={NotFound}></Route>
         </Routes>
       </div>

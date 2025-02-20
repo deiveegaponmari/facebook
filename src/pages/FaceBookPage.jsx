@@ -4,9 +4,36 @@ import FriendRequest from "../components/FriendRequest";
 import Status from "./Home/Status";
 import CardUpload from "../components/CardUpload";
 import Story from "./Home/Story";
+import { Routes,Route } from "react-router-dom";
 
 export default function FaceBookPage(){
-    return (
+  const users={
+    vanitha:[
+      {
+        id:1,
+        image:"https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ=",
+        name:"vanitha",
+        address:" No. 1, New Bangaru Naidu Colony ,K.K. Nagar (West), Chennai - 600078."
+      }
+    ],
+    Jebastin:[
+      {
+        id:2,
+        image:"https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
+        name:"Jebastin",
+        address:"C T ROAD, ASHOKA TOWER, PAPANNA LANE, BANGALORE, KARNATAKA, India (IN)"
+      }
+    ],
+    uma:[
+      {
+        id:3,
+        image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwgu1A5zgPSvfE83nurkuzNEoXs9DMNr8Ww&s",
+        name:"uma",
+        address:"Juhu Tara Rd, opposite JW Marriott, Juhu Tara, Juhu, Mumbai"
+      }
+    ]
+  }
+return (
       <Grid2 container>
         <Grid2>
           <ListItem>
@@ -19,7 +46,7 @@ export default function FaceBookPage(){
           </ListItem>
         </Grid2>
        {/*  left side newsfeed and post component upload here */}
-        <Grid2 container width={"75%"}>
+        <Grid2 container width={"75%"} justifyContent={"center"}>
            <Grid2>
             <ListItem>
                <CardUpload/> </ListItem>
@@ -31,11 +58,13 @@ export default function FaceBookPage(){
            </Grid2>
         </Grid2>
        {/*  suggestion profiles component upload here */}
-        <Grid2 width={"25%"}>
-            <ListItem>
-              < FriendRequest/>
-            </ListItem>
-        </Grid2>
+       {/*  <Grid2 width={"25%"}>
+          
+          <Routes>
+          <Route path='/friend-request/:label' element={<FriendRequest users={users} />}><Route/>
+         <Routes/>
+         
+        </Grid2> */}
 
       </Grid2>
     )
