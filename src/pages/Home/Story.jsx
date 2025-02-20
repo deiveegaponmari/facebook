@@ -16,7 +16,8 @@ export default function Story() {
     const [storyData, setStoryData] = useState([])
     useEffect(() => {
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/media/getfile`)
-            .then((response) => setStoryData(response.data))
+            .then((response) => console.log(response))
+            /* setStoryData(response.data)) */
             .catch((error) => {
                 console.log(error)
                 alert("Failed to load stories")
