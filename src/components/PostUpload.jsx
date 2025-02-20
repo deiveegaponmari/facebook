@@ -6,7 +6,7 @@ import axios from "axios";
 
 const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 
-const postsData = [
+/* const postsData = [
   {
     id: 1,
     username: "vanitha",
@@ -96,10 +96,10 @@ const postsData = [
     media: "https://videos.pexels.com/video-files/4763474/4763474-sd_640_360_24fps.mp4",
     type: "video"
   }
-];
+]; */
 
-const NewsFeed = (props) => {
-  const {setUploadFiles, uploadFiles, staticData=false} = props;
+const PostUpload = (props) => {
+  const {setUploadFiles, uploadFiles} = props;
   const [posts, setPosts] = useState(postsData);
   const [commentData, setCommentData] = useState({}); // Stores comment input for each post
   const [comments, setComments] = useState({}); // Stores list of comments for each post
@@ -113,8 +113,7 @@ const NewsFeed = (props) => {
   };
 
   useEffect(() => {
-    if(staticData) {
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
         .then((response) => {
           console.log('kkkkkkkkkk response.data:-- ', response.data);
           let fullList = [];
@@ -138,8 +137,7 @@ const NewsFeed = (props) => {
             console.log(error)
             alert("Failed to load stories")
         })
-    }
-}, [uploadFiles, staticData])
+}, [uploadFiles])
 
   // Update comment input value
   const handleInputChange = (postId, value) => {
@@ -244,4 +242,4 @@ const NewsFeed = (props) => {
   );
 };
 
-export default NewsFeed;
+export default PostUpload;

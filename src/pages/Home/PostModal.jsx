@@ -47,7 +47,7 @@ export default function PostModal({ open, handleClose, setUploadFiles, setModalO
                             </Grid2>
                             <Grid2>
                                 <ListItem>
-                                    <UploadFile setUploadFiles={setUploadFiles} setModalOpen={setModalOpen} /> 
+                                    <UploadFile setUploadFiles={setUploadFiles} setModalOpen={setModalOpen} type={'post'} lastEnd={'createpost'} /> 
                                 </ListItem>
                             </Grid2>
                              {/* <Grid2>

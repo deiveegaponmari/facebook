@@ -2,8 +2,8 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 //import { useEffect } from 'react';
-export default function UploadFile(props) {
-  const {setUploadFiles, setModalOpen=null, type, lastEnd} = props;
+export default function PostFile(props) {
+  const {setUploadFiles, setModalOpen=null} = props;
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -15,7 +15,7 @@ export default function UploadFile(props) {
     whiteSpace: 'nowrap',
     width: 1,
   });
-  async function handleFileUpload(event) {
+  async function handlePostUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -24,7 +24,7 @@ export default function UploadFile(props) {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/${type}/${lastEnd}`,
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/post/createpost`,
         {
           method: "POST",
           body: formData,
@@ -57,7 +57,7 @@ export default function UploadFile(props) {
       Upload files
       <VisuallyHiddenInput
         type="file"
-        onChange={handleFileUpload}
+        onChange={handlePostUpload}
         multiple
       />
     </Button>

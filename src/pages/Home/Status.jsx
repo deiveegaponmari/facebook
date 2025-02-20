@@ -31,7 +31,7 @@ export default function Status(props) {
                 </Grid2>
 
             </Grid2>
-            {openUpload && <UploadFile setUploadFiles={setUploadFiles}/>}
+            {openUpload && <UploadFile setUploadFiles={setUploadFiles} type={'media'}  lastEnd={'createmedia'} />}
         </Grid2>
     )
 }

@@ -9,7 +9,7 @@ export default function ProfilePage() {
     const [postModal, setPostModal] = useState(false)
     const [uploadFiles, setUploadFiles] = useState([])
     return (
-        <Grid2 container direction={"column"} justifyContent={"center"} alignContent={"center"}>
+        <Grid2 container direction={"column"} justifyContent={"center"} alignContent={"center"} spacing={3}>
             <Grid2>
                 <ListItem>
                     <img src="https://images.pexels.com/photos/56866/garden-rose-red-pink-56866.jpeg?auto=compress&cs=tinysrgb&w=400"
@@ -17,8 +17,8 @@ export default function ProfilePage() {
                         alt="rose" />
                 </ListItem>
             </Grid2><br /><br /><br /><br /><br /><br />
-            <Grid2 container >
-                <Grid2>
+            <Grid2 container  >
+                <Grid2 >
                     <ListItem><AccountCircleIcon fontSize="large" color="primary" /></ListItem>
                 </Grid2>
                 <Grid2>

@@ -37,38 +37,36 @@ export default function FaceBookPage(){
   }
   console.log('llll uploadFiles :- ', uploadFiles);
 return (
-      <Grid2 container>
-        <Grid2>
+      <Grid2 container spacing={2}>
+        <Grid2 >
           <ListItem>
             <Story uploadFiles={uploadFiles}/>
           </ListItem>
         </Grid2>
-        <Grid2>
+        <Grid2 container>
+          <Grid2 size={6}>
           <ListItem>
             <Status setUploadFiles={setUploadFiles}/>
           </ListItem>
+          </Grid2>
+          <Grid2 size={6}>
+            <ListItem>
+            <FriendRequest users={users} />
+            </ListItem>
+          </Grid2>
         </Grid2>
-       {/*  left side newsfeed and post component upload here */}
-        <Grid2 container width={"75%"} justifyContent={"center"}>
-           <Grid2>
+       {/* left side newsfeed and right side post component  */}
+        <Grid2 container spacing={1}>
+           <Grid2 size={6}>
             <ListItem>
                <CardUpload/> </ListItem>
            </Grid2>
-           <Grid2>
+           <Grid2 size={6}>
             <ListItem>
-             {/*  <CardUpload/> */}
+             <CardUpload staticData={true} />
             </ListItem>
            </Grid2>
         </Grid2>
-       {/*  suggestion profiles component upload here */}
-         <Grid2 width={"25%"}>
-          
-        <ListItem>
-          <FriendRequest users={users} />
-         </ListItem>
-         
-        </Grid2> 
-
-      </Grid2>
+        </Grid2>
     )
 }
