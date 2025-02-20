@@ -3,7 +3,8 @@ import AddIcon from '@mui/icons-material/Add';
 import UploadFile from "../../components/UploadFile";
 import { useState } from "react";
 
-export default function Status() {
+export default function Status(props) {
+    const {setUploadFiles} = props;
     const[openUpload,setOpenUpload]=useState(false)
     return (
         <Grid2 container justifyContent={"center"}>
@@ -30,7 +31,7 @@ export default function Status() {
                 </Grid2>
 
             </Grid2>
-            {openUpload && <UploadFile/>}
+            {openUpload && <UploadFile setUploadFiles={setUploadFiles}/>}
         </Grid2>
     )
 }

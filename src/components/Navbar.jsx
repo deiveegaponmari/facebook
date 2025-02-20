@@ -109,6 +109,7 @@ export default function Navbar() {
                                             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                                             borderRadius: "10px",
                                             padding: "10px",
+                                            zIndex: 10
                                         }}>
                                             <Chat />
                                             <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button>

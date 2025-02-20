@@ -1,3 +1,4 @@
+import React, {  useState } from "react";
 import { Grid2, ListItem } from "@mui/material";
 import Filter from "../components/Filter";
 import FriendRequest from "../components/FriendRequest";
@@ -7,6 +8,7 @@ import Story from "./Home/Story";
 import { Routes,Route } from "react-router-dom";
 
 export default function FaceBookPage(){
+  const [uploadFiles, setUploadFiles] = useState([])
   const users={
     vanitha:[
       {
@@ -33,16 +35,17 @@ export default function FaceBookPage(){
       }
     ]
   }
+  console.log('llll uploadFiles :- ', uploadFiles);
 return (
       <Grid2 container>
         <Grid2>
           <ListItem>
-            <Story/>
+            <Story uploadFiles={uploadFiles}/>
           </ListItem>
         </Grid2>
         <Grid2>
           <ListItem>
-            <Status/>
+            <Status setUploadFiles={setUploadFiles}/>
           </ListItem>
         </Grid2>
        {/*  left side newsfeed and post component upload here */}

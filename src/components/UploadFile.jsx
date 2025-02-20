@@ -2,7 +2,8 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 //import { useEffect } from 'react';
-export default function UploadFile() {
+export default function UploadFile(props) {
+  const {setUploadFiles, setModalOpen=null} = props;
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -35,7 +36,11 @@ export default function UploadFile() {
       }
 
       const result = await response.json();
-      console.log("Upload successful:", result);
+      console.log("Upload successful:", result.url);
+      setUploadFiles(result.url);
+      if(setModalOpen !== null) {
+        setModalOpen(false);
+      }
     } catch (error) {
       console.error("Upload failed:", error);
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
+import zIndex from "@mui/material/styles/zIndex";
 
 // Initialize socket connection
 const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
@@ -47,7 +48,8 @@ export default function Chat() {
                 justifyContent: "center",
                 height: "50vh",
                 padding: 2,
-                backgroundColor: "#f4f6f8"
+                backgroundColor: "#f4f6f8",
+                zIndex: 1
             }}
         >
             <Card sx={{ width: "400px", maxWidth: "100%", boxShadow: 3 }}>
@@ -63,7 +65,8 @@ export default function Chat() {
                             border: "1px solid #ddd",
                             borderRadius: "5px",
                             padding: "10px",
-                            backgroundColor: "#fafafa"
+                            backgroundColor: "#fafafa",
+                            zIndex: 1
                         }}
                     >
                         {messages.map((msg, index) => (

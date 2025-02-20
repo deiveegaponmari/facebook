@@ -3,7 +3,7 @@ import { Modal, Box, Typography, Grid2, ListItem, Button } from "@mui/material"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFile from "../../components/UploadFile";
-export default function PostModal({ open, handleClose }) {
+export default function PostModal({ open, handleClose, setUploadFiles, setModalOpen }) {
     function handlePost(){
         console.log("post clicked")
     }
@@ -47,7 +47,7 @@ export default function PostModal({ open, handleClose }) {
                             </Grid2>
                             <Grid2>
                                 <ListItem>
-                                    <UploadFile/> 
+                                    <UploadFile setUploadFiles={setUploadFiles} setModalOpen={setModalOpen} /> 
                                 </ListItem>
                             </Grid2>
                              {/* <Grid2>

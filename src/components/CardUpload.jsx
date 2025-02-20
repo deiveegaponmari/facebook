@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, Avatar, Typography, CardMedia, CardActions, IconButton, Button, TextField } from "@mui/material";
 import { Favorite, Share, MoreVert, ChatBubbleOutline } from "@mui/icons-material";
 import io from "socket.io-client";
+import axios from "axios";
 
 const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 
@@ -39,8 +40,8 @@ const postsData = [
     avatar: "https://i.pravatar.cc/150?img=6",
     time: "6d ago",
     content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
-    type: "video"
+    media: "https://plus.unsplash.com/premium_photo-1687067885966-d755107af021?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bW90aXZhdGlvbnxlbnwwfHwwfHx8MA%3D%3D",
+    type: "image"
   },
   {
     id: 5,
@@ -48,7 +49,7 @@ const postsData = [
     avatar: "https://i.pravatar.cc/150?img=6",
     time: "6d ago",
     content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
+    media: "https://videos.pexels.com/video-files/4763786/4763786-sd_960_506_24fps.mp4",
     type: "video"
   },
   {
@@ -57,8 +58,8 @@ const postsData = [
     avatar: "https://i.pravatar.cc/150?img=6",
     time: "6d ago",
     content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
-    type: "video"
+    media: "https://images.unsplash.com/photo-1494178270175-e96de2971df9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bW90aXZhdGlvbnxlbnwwfHwwfHx8MA%3D%3D",
+    type: "image"
   }, {
     id: 7,
     username: "Taylor Swift",
@@ -74,7 +75,7 @@ const postsData = [
     avatar: "https://i.pravatar.cc/150?img=6",
     time: "6d ago",
     content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
+    media: "https://videos.pexels.com/video-files/4763871/4763871-sd_960_506_24fps.mp4",
     type: "video"
   },
   {
@@ -92,12 +93,13 @@ const postsData = [
     avatar: "https://i.pravatar.cc/150?img=6",
     time: "6d ago",
     content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
+    media: "https://videos.pexels.com/video-files/4763474/4763474-sd_640_360_24fps.mp4",
     type: "video"
   }
 ];
 
-const NewsFeed = () => {
+const NewsFeed = (props) => {
+  const {setUploadFiles, uploadFiles} = props;
   const [posts, setPosts] = useState(postsData);
   const [commentData, setCommentData] = useState({}); // Stores comment input for each post
   const [comments, setComments] = useState({}); // Stores list of comments for each post
@@ -109,6 +111,33 @@ const NewsFeed = () => {
       [postId]: prev[postId] ? "" : "" // Show/hide input field
     }));
   };
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/media/getfile`)
+        .then((response) => {
+          console.log('kkkkkkkkkk response.data:-- ', response.data);
+          let fullList = [];
+          for(let i in response.data){
+            let singleObj = response.data[i];
+            console.log('kkkkkk i:-- ', singleObj);
+            fullList.push({
+              id: i,
+              username: "Taylor Swift",
+              avatar: "https://i.pravatar.cc/150?img=6",
+              time: "6d ago",
+              content: "Here’s a sneak peek of my new music video! 🎶",
+              media: singleObj?.src,
+              type: singleObj?.type
+            });
+          }
+          setPosts(fullList);
+        })
+        /* setStoryData(response.data)) */
+        .catch((error) => {
+            console.log(error)
+            alert("Failed to load stories")
+        })
+}, [uploadFiles])
 
   // Update comment input value
   const handleInputChange = (postId, value) => {

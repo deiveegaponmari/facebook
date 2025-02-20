@@ -11,29 +11,34 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 //import { useSelector } from "react-redux";
-export default function Story() {
+export default function Story(props) {
+    const {uploadFiles} = props;
+    console.log('llll uploadFiles 222 :- ', uploadFiles);
+    console.log('filess upload: -', uploadFiles);
     // const {storyReducer}=useSelector((state)=>state)
     const [storyData, setStoryData] = useState([])
     useEffect(() => {
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/media/getfile`)
-            .then((response) => console.log(response))
+            .then((response) => setStoryData(response.data))
             /* setStoryData(response.data)) */
             .catch((error) => {
                 console.log(error)
                 alert("Failed to load stories")
             })
-    }, [])
+    }, [uploadFiles])
     return (
         <Grid2 container>
             <Grid2 container spacing={2} justifyContent={'center'} alignItems={"center"}>
                 {storyData.map((item, index) => {
+                    console.log('files item:-- ', item)
                     return <Card sx={{ maxWidth: 345 }} key={index}>
-                        {item.imageUrl ? (
+                        {item.src ? (
                             <>
                                 <CardMedia
+                                component="img" height="300" image={item.src} alt="post media"
                                     sx={{ height: 140 }}
-                                    image={item.imageUrl}
-                                    title="green iguana"
+                                    // image={item.src}
+                                    // title="green iguana"
                                 />
 
                             </>
