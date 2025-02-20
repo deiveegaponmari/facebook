@@ -42,7 +42,7 @@ export default function Navbar() {
                                             renderInput={(params) => <TextField {...params} label="Search Facebook" />}
                                             onChange={(_, value) => {
                                                 if (value) {
-                                                    navigate("/friend-request/" + value.label);
+                                                    navigate("/" + value.label);
                                                 }
                                             }}
                                         />

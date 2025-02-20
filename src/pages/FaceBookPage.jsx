@@ -58,13 +58,13 @@ return (
            </Grid2>
         </Grid2>
        {/*  suggestion profiles component upload here */}
-       {/*  <Grid2 width={"25%"}>
+         <Grid2 width={"25%"}>
           
-          <Routes>
-          <Route path='/friend-request/:label' element={<FriendRequest users={users} />}><Route/>
-         <Routes/>
+        <ListItem>
+          <FriendRequest users={users} />
+         </ListItem>
          
-        </Grid2> */}
+        </Grid2> 
 
       </Grid2>
     )

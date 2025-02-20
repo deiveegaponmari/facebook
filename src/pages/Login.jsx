@@ -24,7 +24,7 @@ export default function Login() {
             if (response.ok) {
                 alert("Login successful");
                 setTimeout(() => {
-                    navigate("/home")
+                    navigate("/:home")
                 })
             }
         }).catch((error) => {
