@@ -6,11 +6,11 @@ import axios from "axios";
 
 const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 
-const postsData = [
+/* const postsData = [
   {
     id: 1,
     username: "vanitha",
-    avatar: "https://i.pravatar.cc/150?img=3",
+    avatar: "https://images.unsplash.com/photo-1585016495481-91613a3ab1bc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bmF0dXJhbHxlbnwwfHwwfHx8MA%3D%3D",
     time: "2h ago",
     content: "Enjoying a great day at the beach!",
     media: "https://i.pinimg.com/736x/f1/5d/ea/f15deaa797aaa5901d514fde36a51ea9.jpg",
@@ -19,7 +19,7 @@ const postsData = [
   {
     id: 2,
     username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
+    avatar: "https://images.unsplash.com/photo-1516475429286-465d815a0df7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG5hdHVyYWx8ZW58MHx8MHx8fDA%3D",
     time: "6d ago",
     content: "Here’s a sneak peek of my new music video! 🎶",
     media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
@@ -28,7 +28,7 @@ const postsData = [
   {
     id: 3,
     username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
+    avatar: "https://plus.unsplash.com/premium_photo-1675127367513-7f4388aa9076?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bmF0dXJhbHxlbnwwfHwwfHx8MA%3D%3D",
     time: "6d ago",
     content: "Here’s a sneak peek of my new music video! 🎶",
     media: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bW90aXZhdGlvbnxlbnwwfHwwfHx8MA%3D%3D",
@@ -96,14 +96,21 @@ const postsData = [
     media: "https://videos.pexels.com/video-files/4763474/4763474-sd_640_360_24fps.mp4",
     type: "video"
   }
-];
-
+]; */
 const NewsFeed = (props) => {
   const {setUploadFiles, uploadFiles, staticData=false} = props;
-  const [posts, setPosts] = useState(postsData);
+  const [posts, setPosts] = useState([]);
   const [commentData, setCommentData] = useState({}); // Stores comment input for each post
   const [comments, setComments] = useState({}); // Stores list of comments for each post
   const [notification, setNotification] = useState("");
+
+  useEffect(()=>{
+    axios.get("http://localhost:5173/post.json")
+    .then((response) => setPosts(response.data))
+    .catch((error) => {
+        console.log(error)
+    })
+  }, [])
   // Toggle comment input visibility
   const handleCommentClick = (postId) => {
     setCommentData((prev) => ({

@@ -1,26 +1,91 @@
-[{
-    "post": {
-      "user": {
-        "name": "Ente Veedu",
-        "profile_link": "#",
-        "follow": true
-      },
-      "timestamp": "5 days ago",
-      "content": {
-        "text": "House warming day ❤️",
-        "image": "house_warming.jpg"
-      },
-      "engagement": {
-        "likes": 17000,
-        "comments": 143,
-        "shares": 175
-      },
-      "actions": {
-        "like": true,
-        "comment": true,
-        "send": true,
-        "share": true
-      }
-    }
+ [
+  {
+    "id": 1,
+    "username": "vanitha",
+    "avatar": "https://images.unsplash.com/photo-1585016495481-91613a3ab1bc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bmF0dXJhbHxlbnwwfHwwfHx8MA%3D%3D",
+    "time": "2h ago",
+    "content": "I love nature",
+    "media": "https://images.pexels.com/photos/668465/pexels-photo-668465.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "type": "image"
+  },
+  {
+    "id": 2,
+    "username": "Jebastin",
+    "avatar": "https://images.unsplash.com/photo-1516475429286-465d815a0df7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG5hdHVyYWx8ZW58MHx8MHx8fDA%3D",
+    "time": "6d ago",
+    "content": "Man training outdoors while raining",
+    "media": "https://mixkit.co/free-stock-video/man-training-outdoors-while-raining-33130/",
+    "type": "video"
+  },
+  {
+    "id": 3,
+    "username": "parvin",
+    "avatar": "https://plus.unsplash.com/premium_photo-1675127367513-7f4388aa9076?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bmF0dXJhbHxlbnwwfHwwfHx8MA%3D%3D",
+    "time": "2h ago",
+    "content": "Sweet Morning Guys",
+    "media": "https://images.pexels.com/photos/1169084/pexels-photo-1169084.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "type": "image"
+  },
+  {
+    "id": 4,
+    "username": "Rajan",
+    "avatar": "https://plus.unsplash.com/premium_photo-1670441329184-0d347622b1c8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fG5hdHVyYWx8ZW58MHx8MHx8fDA%3D",
+    "time": "3d ago",
+    "content": "My stress relief place",
+    "media": "https://images.pexels.com/photos/1631678/pexels-photo-1631678.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "type": "image"
+  },
+  {
+    "id": 5,
+    "username": "srikanth",
+    "avatar": "https://images.unsplash.com/photo-1516496636080-14fb876e029d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fG5hdHVyYWx8ZW58MHx8MHx8fDA%3D",
+    "time": "2d ago",
+    "content": "Runner summons motivation at start of race",
+    "media": "https://mixkit.co/free-stock-video/runner-summons-motivation-at-start-of-race-9024/",
+    "type": "video"
+  },
+  {
+    "id": 6,
+    "username": "Harishini",
+    "avatar": "https://images.unsplash.com/photo-1574873346832-76340f40b01e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fG5hdHVyYWx8ZW58MHx8MHx8fDA%3D",
+    "time": "1d ago",
+    "content": "Most lovable moments, when my chilhood perods I played to butterfly",
+    "media": "https://images.pexels.com/photos/675313/pexels-photo-675313.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "type": "image"
+  }, {
+    "id": 7,
+    "username": "Mariselvam",
+    "avatar": "https://images.pexels.com/photos/381739/pexels-photo-381739.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "time": "5d ago",
+    "content": "Motivated man exercises on floor at home",
+    "media": "https://mixkit.co/free-stock-video/motivated-man-exercises-on-floor-at-home-5388/",
+    "type": "video"
+  },
+  {
+    "id": 8,
+    "username": "Esther salini",
+    "avatar": "https://images.pexels.com/photos/1266810/pexels-photo-1266810.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "time": "3h ago",
+    "content": "Woman speaking on stage at business conference",
+    "media": "https://mixkit.co/free-stock-video/woman-speaking-on-stage-at-business-conference-13194/",
+    "type": "video"
+  },
+  {
+    "id": 9,
+    "username": "Manikandan",
+    "avatar": "https://images.pexels.com/photos/2240000/pexels-photo-2240000.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "time": "6hr ago",
+    "content": "Man in a Weightlifting Session",
+    "media": "https://mixkit.co/free-stock-video/man-in-a-weightlifting-session-100545/",
+    "type": "video"
+  },
+  {
+    "id": 10,
+    "username": "sivasakthi",
+    "avatar": "https://images.pexels.com/photos/45853/grey-crowned-crane-bird-crane-animal-45853.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "time": "50 min ago",
+    "content": "Lady enjoying the sunset",
+    "media": "https://mixkit.co/free-stock-video/lady-enjoying-the-sunset-6497/",
+    "type": "video"
   }
-  ]
+]
