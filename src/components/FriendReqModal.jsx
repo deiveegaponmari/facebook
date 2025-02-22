@@ -32,7 +32,7 @@ export default function FriendReqModal({ open, handleClose }) {
         setSnackbarMessage(`Friend Request ${action}ed`);
         setSnackbarOpen(true);
         const username = "CurrentUser"; 
-        socket.emit("Friend_Request", { action, username });
+        socket.emit("notification", { action, username });
     };
 
     // Function to close Snackbar
