@@ -1,19 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, Box, Typography, Grid2, ListItem, Button,Alert } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
+import io from "socket.io-client";
+
+const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 export default function FriendReqModal({ open, handleClose }) {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    function handlePost() {
+    const [showFriendNotify,setshowFriendNotify]=useState("");
+   /*  function handlePost() {
         console.log("post clicked")
-    }
+    } */
+
+    //handile notification send to if the user accept or reject
+
+    useEffect(()=>{
+        
+        socket.on("notification", (data) => {
+            setshowFriendNotify(data.message);
+          });
+      
+          return () => {
+            socket.off("notification");
+          };
+    },[setshowFriendNotify])
     // Function to handle Accept/Reject button clicks
     const handleAction = (action) => {
         setSnackbarMessage(`Friend Request ${action}ed`);
         setSnackbarOpen(true);
+        const username = "CurrentUser"; 
+        socket.emit("Friend_Request", { action, username });
     };
 
     // Function to close Snackbar

@@ -10,7 +10,7 @@ import { useState,useEffect } from "react";
 import Chat from "./Chat";
 import io from "socket.io-client";
 
-const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
+
 export default function Navbar() {
     const navigate = useNavigate();
     const [chatOpen, setChatOpen] = useState(false);
@@ -26,6 +26,7 @@ export default function Navbar() {
     const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
+        const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
         socket.on("notification", (data) => {
             setNotification(data.message);
             setShowNotification(true);
