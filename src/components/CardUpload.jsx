@@ -169,6 +169,8 @@ const NewsFeed = (props) => {
       ...prev,
       [postId]: "" // Clear input field
     }));
+    const username="New User";
+    socket.emit("comment_post",{postId,username})
   };
   //handle like button
   const handlelike = (postId) => {
