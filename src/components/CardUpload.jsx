@@ -146,7 +146,7 @@ const NewsFeed = (props) => {
             alert("Failed to load stories")
         })
     }
-}, [uploadFiles, staticData])
+}, [ staticData])
 
   // Update comment input value
   const handleInputChange = (postId, value) => {
