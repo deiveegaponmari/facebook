@@ -25,7 +25,7 @@ export default function UploadFile(props) {
     socket.on("post_notification", (data) => {
       setshowPostNotify(data.message);
         // Trigger Notification Icon Visibility
-        setShowNotificationIcon(true);
+      /*   setShowNotificationIcon(true); */
     });
 
     return () => {

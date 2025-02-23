@@ -24,6 +24,8 @@ export default function Navbar() {
     const [notification, setNotification] = useState("");
     const [showNotification, setShowNotification] = useState(false);
 
+
+
     useEffect(() => {
         /* const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 
