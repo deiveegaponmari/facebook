@@ -4,9 +4,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFile from "../../components/UploadFile";
 export default function PostModal({ open, handleClose, setUploadFiles, setModalOpen }) {
-    function handlePost(){
+ /*    function handlePost(){
         console.log("post clicked")
-    }
+    } */
     return (
         <>
             <Modal
@@ -57,13 +57,13 @@ export default function PostModal({ open, handleClose, setUploadFiles, setModalO
                                     </Button>
                                 </ListItem>
                             </Grid2> */} 
-                            <Grid2>
+                           {/*  <Grid2>
                                 <ListItem>
                                     <Button variant="standard" fullWidth onClick={handlePost}>
                                         Post
                                     </Button>
                                 </ListItem>
-                            </Grid2>
+                            </Grid2> */}
                         </Grid2>
                     </Grid2>
 

@@ -1,12 +1,11 @@
-import { Grid2, ListItem, Input, TextField, Autocomplete,Badge } from "@mui/material";
+import { Grid2, ListItem, Input, TextField, Autocomplete, Badge } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import HomeIcon from '@mui/icons-material/Home';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import Chat from "./Chat";
 import io from "socket.io-client";
 
@@ -26,6 +25,16 @@ export default function Navbar() {
     const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
+        /* const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
+
+        socket.on("realtime_chat", (data) => {
+            setNotification(data.message);
+            setShowNotification(true);
+        });
+    
+        return () => {
+            socket.off("realtime_chat");
+        }; */
         const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
         socket.on("notification", (data) => {
             setNotification(data.message);
@@ -34,7 +43,7 @@ export default function Navbar() {
 
         return () => {
             socket.off("notification");
-        };
+        }; 
     }, []);
     return (
         <Grid2>
@@ -95,8 +104,15 @@ export default function Navbar() {
                                         <MenuItem value="10">Ten</MenuItem>
                                         <MenuItem value="20">Twenty</MenuItem>
                                     </Select> */}
+                                 {/*    <Badge color="error" variant={showNotification ? "dot" : "standard"}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" onClick={() => setShowNotification(false)} width="40" height="40" viewBox="0 0 50 50">
+                                            <path d="M 25 2 C 12.300781 2 2 11.601563 2 23.5 C 2 29.800781 4.898438 35.699219 10 39.800781 L 10 48.601563 L 18.601563 44.101563 C 20.699219 44.699219 22.800781 44.898438 25 44.898438 C 37.699219 44.898438 48 35.300781 48 23.398438 C 48 11.601563 37.699219 2 25 2 Z M 27.300781 30.601563 L 21.5 24.398438 L 10.699219 30.5 L 22.699219 17.800781 L 28.601563 23.699219 L 39.101563 17.800781 Z"></path>
+                                        </svg>
+                                    </Badge> */}
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" onClick={toggleChat} width="40" height="40" viewBox="0 0 50 50">
+
+                                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" 
+                                    onClick={toggleChat} width="40" height="40" viewBox="0 0 50 50">
                                         <path d="M 25 2 C 12.300781 2 2 11.601563 2 23.5 C 2 29.800781 4.898438 35.699219 10 39.800781 L 10 48.601563 L 18.601563 44.101563 C 20.699219 44.699219 22.800781 44.898438 25 44.898438 C 37.699219 44.898438 48 35.300781 48 23.398438 C 48 11.601563 37.699219 2 25 2 Z M 27.300781 30.601563 L 21.5 24.398438 L 10.699219 30.5 L 22.699219 17.800781 L 28.601563 23.699219 L 39.101563 17.800781 Z"></path>
                                     </svg>
                                     {chatOpen && (

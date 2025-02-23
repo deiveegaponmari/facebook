@@ -211,7 +211,7 @@ const NewsFeed = (props) => {
             <IconButton onClick={() => handleCommentClick(post.id)}>
               <ChatBubbleOutline />
             </IconButton>
-            <IconButton><Share /></IconButton>
+            <IconButton /* onClick={handleShare} */><Share /></IconButton>
           </CardActions>
 
           {/* Comment Input Box - Show when clicking "Comment" */}
