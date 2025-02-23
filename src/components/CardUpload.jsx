@@ -98,18 +98,18 @@ const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websock
   }
 ]; */
 const NewsFeed = (props) => {
-  const {setUploadFiles, uploadFiles, staticData=false} = props;
+  const { setUploadFiles, uploadFiles, staticData = false } = props;
   const [posts, setPosts] = useState([]);
   const [commentData, setCommentData] = useState({}); // Stores comment input for each post
   const [comments, setComments] = useState({}); // Stores list of comments for each post
   const [notification, setNotification] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     axios.get("http://localhost:5173/post.json")
-    .then((response) => setPosts(response.data))
-    .catch((error) => {
+      .then((response) => setPosts(response.data))
+      .catch((error) => {
         console.log(error)
-    })
+      })
   }, [])
   // Toggle comment input visibility
   const handleCommentClick = (postId) => {
@@ -120,12 +120,12 @@ const NewsFeed = (props) => {
   };
 
   useEffect(() => {
-    if(staticData) {
+    if (staticData) {
       axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
         .then((response) => {
           console.log('kkkkkkkkkk response.data:-- ', response.data);
           let fullList = [];
-          for(let i in response.data){
+          for (let i in response.data) {
             let singleObj = response.data[i];
             console.log('kkkkkk i:-- ', singleObj);
             fullList.push({
@@ -142,11 +142,11 @@ const NewsFeed = (props) => {
         })
         /* setStoryData(response.data)) */
         .catch((error) => {
-            console.log(error)
-            alert("Failed to load stories")
+          console.log(error)
+          alert("Failed to load stories")
         })
     }
-}, [ staticData])
+  }, [staticData])
 
   // Update comment input value
   const handleInputChange = (postId, value) => {
@@ -169,8 +169,8 @@ const NewsFeed = (props) => {
       ...prev,
       [postId]: "" // Clear input field
     }));
-    const username="New User";
-    socket.emit("comment_post",{postId,username})
+    const username = "New User";
+    socket.emit("comment_post", { postId, username })
   };
   //handle like button
   const handlelike = (postId) => {
@@ -187,6 +187,34 @@ const NewsFeed = (props) => {
       socket.off("notification");
     };
   }, [setNotification]);
+  //handle share button
+  const handleShare = (post) => {
+    const shareUrl = `${window.location.origin}/post/${post.id}`;
+    const shareText = `${post.content}\nCheck it out here: ${shareUrl}`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: post.username,
+        text: shareText,
+        url: shareUrl
+      })
+        .then(() => console.log("Post shared successfully"))
+        .catch((error) => console.log("Error sharing", error));
+    } else {
+      // Fallback: Open share options manually
+      const encodedText = encodeURIComponent(shareText);
+      const encodedUrl = encodeURIComponent(shareUrl);
+
+      const socialLinks = {
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
+        whatsapp: `https://api.whatsapp.com/send?text=${encodedText}`
+      };
+
+      // Open the share option in a new window/tab
+      window.open(socialLinks.facebook, "_blank");
+    }
+  };
 
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20 }}>
@@ -211,7 +239,7 @@ const NewsFeed = (props) => {
             <IconButton onClick={() => handleCommentClick(post.id)}>
               <ChatBubbleOutline />
             </IconButton>
-            <IconButton /* onClick={handleShare} */><Share /></IconButton>
+            <IconButton onClick={() => handleShare(post)} ><Share /></IconButton>
           </CardActions>
 
           {/* Comment Input Box - Show when clicking "Comment" */}
