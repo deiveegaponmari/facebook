@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, Avatar, Typography, CardMedia, CardActions, IconButton, Button, TextField } from "@mui/material";
+import { Card, CardContent, CardHeader, Avatar, Typography, CardMedia, CardActions, IconButton, Button, 
+  TextField,Dialog,DialogContent,DialogTitle } from "@mui/material";
 import { Favorite, Share, MoreVert, ChatBubbleOutline } from "@mui/icons-material";
+import { Facebook, Twitter, WhatsApp ,Close} from "@mui/icons-material";
+
 import io from "socket.io-client";
 import axios from "axios";
 
@@ -103,6 +106,7 @@ const NewsFeed = (props) => {
   const [commentData, setCommentData] = useState({}); // Stores comment input for each post
   const [comments, setComments] = useState({}); // Stores list of comments for each post
   const [notification, setNotification] = useState("");
+   const [sharePost, setSharePost] = useState(null); // Store the post to be shared
 
   useEffect(() => {
     axios.get("http://localhost:5173/post.json")
@@ -188,7 +192,7 @@ const NewsFeed = (props) => {
     };
   }, [setNotification]);
   //handle share button
-  const handleShare = (post) => {
+/*   const handleShare = (post) => {
     const shareUrl = `${window.location.origin}/post/${post.id}`;
     const shareText = `${post.content}\nCheck it out here: ${shareUrl}`;
 
@@ -214,8 +218,26 @@ const NewsFeed = (props) => {
       // Open the share option in a new window/tab
       window.open(socialLinks.facebook, "_blank");
     }
+  }; */
+ // Handle share button click
+  const handleShareClick = (post) => {
+    setSharePost(post); // Open the share modal
   };
+  // Handle share to a specific social platform
+  const handleShareToPlatform = (platform, post) => {
+    const shareUrl = `${window.location.origin}/post/${post.id}`;
+    const shareText = `${post.content}\nCheck it out here: ${shareUrl}`;
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(shareUrl);
 
+    const socialLinks = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
+      whatsapp: `https://api.whatsapp.com/send?text=${encodedText}`
+    };
+
+    window.open(socialLinks[platform], "_blank");
+  };
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20 }}>
       {posts.map((post) => (
@@ -239,7 +261,7 @@ const NewsFeed = (props) => {
             <IconButton onClick={() => handleCommentClick(post.id)}>
               <ChatBubbleOutline />
             </IconButton>
-            <IconButton onClick={() => handleShare(post)} ><Share /></IconButton>
+            <IconButton onClick={() =>  handleShareClick(post)} ><Share /></IconButton>
           </CardActions>
 
           {/* Comment Input Box - Show when clicking "Comment" */}
@@ -277,6 +299,28 @@ const NewsFeed = (props) => {
           )}
         </Card>
       ))}
+
+     <div>
+      <Dialog open={Boolean(sharePost)} onClose={() => setSharePost(null)}>
+        <DialogTitle>
+          Share Post
+          <IconButton onClick={() => setSharePost(null)} style={{ float: "right" }}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent style={{ display: "flex", justifyContent: "center", gap: "20px", padding: "20px" }}>
+          <IconButton onClick={() => handleShareToPlatform("facebook", sharePost)}>
+            <Facebook color="primary" fontSize="large" />
+          </IconButton>
+          <IconButton onClick={() => handleShareToPlatform("twitter", sharePost)}>
+            <Twitter color="primary" fontSize="large" />
+          </IconButton>
+          <IconButton onClick={() => handleShareToPlatform("whatsapp", sharePost)}>
+            <WhatsApp color="primary" fontSize="large" />
+          </IconButton>
+        </DialogContent>
+      </Dialog>
+    </div>
     </div>
   );
 };
