@@ -10,7 +10,7 @@ export default function Chat() {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null); // For auto-scroll
-   // const [notify,setNotify]=useState("")
+    // const [notify,setNotify]=useState("")
 
     // Listen for messages from server
     useEffect(() => {
@@ -21,13 +21,19 @@ export default function Chat() {
             setMessages((prev) => [...prev, data]);
         });
 
-      /*   socket.on("realtime_chat"),(notifydata)=>{
-            setNotify((prevnotify) =>[...prevnotify,notifydata])
-        } */
+        // Listen for message notifications
+        socket.on("new_message_notification", ({ senderId, message }) => {
+            alert(`New message from ${senderId}: ${message}`); // You can customize this UI
+        });
+
+        /*   socket.on("realtime_chat"),(notifydata)=>{
+              setNotify((prevnotify) =>[...prevnotify,notifydata])
+          } */
 
         return () => {
             socket.off("previous_messages");
             socket.off("receive_message");
+            socket.off("new_message_notification");
             /* socket.off("realtime_chat") */
         }
     }, []);
