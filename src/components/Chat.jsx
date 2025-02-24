@@ -3,8 +3,7 @@ import io from "socket.io-client";
 import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
 import zIndex from "@mui/material/styles/zIndex";
 
-// Initialize socket connection
-const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
+
 
 export default function Chat() {
     const [message, setMessage] = useState("");
@@ -14,6 +13,8 @@ export default function Chat() {
 
     // Listen for messages from server
     useEffect(() => {
+        // Initialize socket connection
+        const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
         socket.on("previous_messages", (prevMessages) => {
             setMessages(prevMessages); // Load messages from MongoDB
         });
@@ -34,6 +35,7 @@ export default function Chat() {
             socket.off("previous_messages");
             socket.off("receive_message");
             socket.off("new_message_notification");
+            socket.disconnect();
             /* socket.off("realtime_chat") */
         }
     }, []);
@@ -41,7 +43,11 @@ export default function Chat() {
     // Send message to server
     const sendMessage = () => {
         if (message.trim()) {
-            socket.emit("send_message", message);
+            socket.emit("send_message", {
+                senderId: "currentUserId",  // Replace with actual sender ID
+                recipientId: "recipientUserId",  // Replace with actual recipient ID
+                text: message
+            });
             setMessage(""); // Clear input field
             /*  const username="Current User";
             socket.emit("realtime_chat",{username});  */
