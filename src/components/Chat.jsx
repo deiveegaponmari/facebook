@@ -12,15 +12,15 @@ export default function Chat({ currentUserId, recipientId }) {
 
         socket.emit("register", currentUserId);
 
-        socket.off("previous_messages").on("previous_messages", (prevMessages) => {
+        socket.on("previous_messages").on("previous_messages", (prevMessages) => {
             setMessages(prevMessages);
         });
 
-        socket.off("receive_message").on("receive_message", (data) => {
+        socket.on("receive_message").on("receive_message", (data) => {
             setMessages((prev) => [...prev, data]);
         });
 
-        socket.off("new_message_notification").on("new_message_notification", ({ senderId, message }) => {
+        socket.on("new_message_notification").on("new_message_notification", ({ senderId, message }) => {
             alert(`New message from ${senderId}: ${message}`);
         });
 
