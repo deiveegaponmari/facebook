@@ -16,23 +16,42 @@ export default function FriendReqModal({ open, handleClose }) {
     } */
 
     //handile notification send to if the user accept or reject
-
-    useEffect(()=>{
+    useEffect(() => {
+        const handleNotification = (data) => {
+            setSnackbarMessage(data.message);
+            setSnackbarOpen(true);
+        };
+    
+        socket.on("notification", handleNotification);
+    
+        return () => {
+            socket.off("notification", handleNotification);
+        };
+    }, []);
+    
+    
+   /*  useEffect(()=>{
         
         socket.on("notification", (data) => {
-            setshowFriendNotify(data.message);
+            setshowFriendNotify(data.message); 
+            socket.on("notification", (data) => {
+                setSnackbarMessage(data.message);
+                setSnackbarOpen(true);
+            
           });
       
           return () => {
             socket.off("notification");
           };
-    },[setshowFriendNotify])
+    },[]) */
     // Function to handle Accept/Reject button clicks
     const handleAction = (action) => {
         setSnackbarMessage(`Friend Request ${action}ed`);
         setSnackbarOpen(true);
-        const username = "CurrentUser"; 
-        socket.emit("notification", { action, username });
+       // const username = "CurrentUser"; 
+      /*   socket.emit("notification", { action, username }); */
+      socket.emit("friend_request", { senderId: "User1", recipientId: "User2", action });
+
     };
 
     // Function to close Snackbar
