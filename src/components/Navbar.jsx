@@ -1,3 +1,13 @@
+import { Grid2, ListItem, Input, TextField, Autocomplete, Badge } from "@mui/material";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import HomeIcon from '@mui/icons-material/Home';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import Chat from "./Chat";
+import socket from "../middleware/socket";
 export default function Navbar() {
     const navigate = useNavigate();
     const [chatOpen, setChatOpen] = useState(false);
@@ -87,9 +97,9 @@ export default function Navbar() {
                                             padding: "10px",
                                             zIndex: 10
                                         }}>
-                                            <Chat 
-                                                currentUserId={loggedInUserId} 
-                                                recipientId={selectedChatUserId} 
+                                            <Chat
+                                                currentUserId={loggedInUserId}
+                                                recipientId={selectedChatUserId}
                                             />
                                             <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button>
                                         </Grid2>
