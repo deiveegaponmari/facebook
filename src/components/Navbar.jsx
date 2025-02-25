@@ -7,7 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import Chat from "./Chat";
-import io from "socket.io-client";
+import socket from "../middleware/socket";
 
 
 export default function Navbar() {
@@ -30,9 +30,7 @@ export default function Navbar() {
 
 
     useEffect(() => {
-        const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
-    
-        socket.on("receive_message", (message) => {
+     socket.on("receive_message", (message) => {
             console.log("New message received:", message);
             setNewMessage(true); // Show notification badge
         });
