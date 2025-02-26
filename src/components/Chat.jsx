@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
 import socket from "../middleware/socket";
 
-export default function Chat(/* currentUserId, recipientId  */) {
+export default function Chat({currentUserId, recipientId }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);

@@ -122,7 +122,7 @@ export default function Navbar() {
                                             padding: "10px",
                                             zIndex: 10
                                         }}>
-                                            <Chat />
+                                            <Chat /* currentUserId={user1} recipientId={user2} *//>
                                             <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button>
                                         </Grid2>
                                     )}

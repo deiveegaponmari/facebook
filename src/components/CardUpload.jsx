@@ -109,7 +109,7 @@ const NewsFeed = (props) => {
    const [sharePost, setSharePost] = useState(null); // Store the post to be shared
 
   useEffect(() => {
-    axios.get("http://localhost:5173/post.json")
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/newsfeed/data`)
       .then((response) => setPosts(response.data))
       .catch((error) => {
         console.log(error)
