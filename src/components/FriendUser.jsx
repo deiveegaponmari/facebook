@@ -1,21 +1,21 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Drawer, List, ListItem, ListItemAvatar, ListItemText, Avatar, TextField, Typography, IconButton } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
 
 
-
-const friendsList = [
+/* const friendsList = [
   { name: "Mailsamy Samy", avatar: "https://i.pravatar.cc/150?img=1", lastMessage: "Hii - 8h" },
   { name: "Anu Anusha", avatar: "https://i.pravatar.cc/150?img=2", lastMessage: "Hi - 5d" },
   { name: "Rathika Rathika", avatar: "https://i.pravatar.cc/150?img=3", lastMessage: "You are now connected" }
-];
+]; */
 
-export default function ChatSidebar() {
+export default function FriendUser() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-const[friendData,setFriendData]=useState([])
-  const toggleDrawer = () => setOpen(!open);
+  const [friendData, setFriendData] = useState([])
+  /* const toggleDrawer = () => setOpen(!open); */
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendlist/data`)
@@ -27,13 +27,13 @@ const[friendData,setFriendData]=useState([])
   return (
     <>
       {/* Floating Chat Button */}
-      <IconButton 
-        color="primary" 
-        sx={{ position: "fixed", bottom: 20, right: 20, backgroundColor: "white", borderRadius: "50%" }} 
+      {/* <IconButton
+        color="primary"
+        sx={{ position: "fixed", bottom: 20, right: 20, backgroundColor: "white", borderRadius: "50%" }}
         onClick={toggleDrawer}
       >
         <ChatIcon />
-      </IconButton>
+      </IconButton> */}
 
       {/* Chat Drawer */}
       <Drawer anchor="right" open={open} onClose={toggleDrawer}>

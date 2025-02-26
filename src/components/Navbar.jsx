@@ -1,4 +1,4 @@
-import { Grid2, ListItem, Input, TextField, Autocomplete, Badge } from "@mui/material";
+import { Grid2, ListItem, TextField, Autocomplete, Drawer, IconButton, Typography, List, ListItemAvatar, Avatar, ListItemText, Badge } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import HomeIcon from '@mui/icons-material/Home';
@@ -8,29 +8,36 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import Chat from "./Chat";
 import socket from "../middleware/socket";
+import FriendUser from "./FriendUser";
+import axios from "axios";
+import CloseIcon from "@mui/icons-material/Close";
+import { useData } from "../context/data";
 
 
 export default function Navbar() {
     const navigate = useNavigate();
-    const [chatOpen, setChatOpen] = useState(false);
+    const [friendlistopen, setfriendlistopen] = useState(false)
     const [newMessage, setNewMessage] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [friendData, setFriendData] = useState([])
+    const [search, setSearch] = useState("");
+    const [selectedUser, setSelectedUser] = useState(null)
+    const [isChatOpen, setIsChatOpen] = useState(false);
     const autoData = [
         { label: "vanitha" },
         { label: "Jebastin" },
         { label: "uma" },
     ]
-    function toggleChat() {
-        setChatOpen(!chatOpen)
-        setNewMessage(false);
-    }
+
     const [notification, setNotification] = useState("");
-   
+
     const [showNotification, setShowNotification] = useState(false);
-
-
+ const {decodedToken,isLoggedIn} =useData();
+ const currentUserId=decodedToken?.id;
+ console.log(currentUserId);
 
     useEffect(() => {
-     socket.on("receive_message", (message) => {
+        socket.on("receive_message", (message) => {
             console.log("New message received:", message);
             setNewMessage(true); // Show notification badge
         });
@@ -38,6 +45,20 @@ export default function Navbar() {
             socket.off("receive_message");
         };
     }, []);
+    const toggleDrawer = () => setOpen(!open);
+
+    useEffect(() => {
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendlist/data`)
+            .then((response) => setFriendData(response.data))
+            .catch((error) => {
+                console.log(error)
+            })
+    }, [])
+    function toggleChat(user) {
+        setSelectedUser(user);
+        setIsChatOpen(true)
+        // setNewMessage(false);
+    }
     return (
         <Grid2>
             <ListItem>
@@ -86,30 +107,17 @@ export default function Navbar() {
                                 <Grid2>
                                     <Link to={"/home"}><HomeIcon color="primary" sx={{ fontSize: 40 }} /></Link>
                                 </Grid2>
-                                {/*   <Grid2>
-                                    <PeopleOutlineIcon sx={{ fontSize: 40 }} />
-                                </Grid2> */}
                             </Grid2>
+                            {/*    messenger icon */}
                             <Grid2 container gap={2} padding={1}>
                                 <Grid2>
-                                    {/*    <InputLabel id="label">Age</InputLabel>
-                                    <Select labelId="label" id="select" value="20">
-                                        <MenuItem value="10">Ten</MenuItem>
-                                        <MenuItem value="20">Twenty</MenuItem>
-                                    </Select> */}
-                                    {/*    <Badge color="error" variant={showNotification ? "dot" : "standard"}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" onClick={() => setShowNotification(false)} width="40" height="40" viewBox="0 0 50 50">
-                                            <path d="M 25 2 C 12.300781 2 2 11.601563 2 23.5 C 2 29.800781 4.898438 35.699219 10 39.800781 L 10 48.601563 L 18.601563 44.101563 C 20.699219 44.699219 22.800781 44.898438 25 44.898438 C 37.699219 44.898438 48 35.300781 48 23.398438 C 48 11.601563 37.699219 2 25 2 Z M 27.300781 30.601563 L 21.5 24.398438 L 10.699219 30.5 L 22.699219 17.800781 L 28.601563 23.699219 L 39.101563 17.800781 Z"></path>
-                                        </svg>
-                                    </Badge> */}
-
                                     <Badge color="error" variant={newMessage ? "dot" : "standard"}>
                                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                            onClick={toggleChat} width="40" height="40" viewBox="0 0 50 50">
+                                            onClick={toggleDrawer} width="40" height="40" viewBox="0 0 50 50">
                                             <path d="M 25 2 C 12.300781 2 2 11.601563 2 23.5 C 2 29.800781 4.898438 35.699219 10 39.800781 L 10 48.601563 L 18.601563 44.101563 C 20.699219 44.699219 22.800781 44.898438 25 44.898438 C 37.699219 44.898438 48 35.300781 48 23.398438 C 48 11.601563 37.699219 2 25 2 Z M 27.300781 30.601563 L 21.5 24.398438 L 10.699219 30.5 L 22.699219 17.800781 L 28.601563 23.699219 L 39.101563 17.800781 Z"></path>
                                         </svg>
                                     </Badge>
-                                    {chatOpen && (
+                                    {/* {friendlistopen && (
                                         <Grid2 style={{
                                             position: "fixed",
                                             bottom: "80px",
@@ -121,45 +129,86 @@ export default function Navbar() {
                                             borderRadius: "10px",
                                             padding: "10px",
                                             zIndex: 10
-                                        }}>
-                                            <Chat /* currentUserId={user1} recipientId={user2} *//>
-                                            <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button>
-                                        </Grid2>
+                                        }}> */}
+                                    {/*  <FriendUser onClick={toggleDrawer}  currentUserId={user1} recipientId={user2} /> */}
+                                    {/* Chat Drawer */}
+                                    <Drawer anchor="right" open={open} onClose={toggleDrawer}>
+                                        <div style={{ width: 300, padding: 16 }}>
+                                            <Typography variant="h6" sx={{ display: "flex", justifyContent: "space-between" }}>
+                                                Chats
+                                                <IconButton onClick={toggleDrawer}>
+                                                    <CloseIcon />
+                                                </IconButton>
+                                            </Typography>
+
+                                            {/* Search Bar */}
+                                            <TextField
+                                                fullWidth
+                                                variant="outlined"
+                                                size="small"
+                                                placeholder="Search Messenger"
+                                                onChange={(e) => setSearch(e.target.value)}
+                                                sx={{ mb: 2 }}
+                                            />
+
+                                            {/* Friends List */}
+                                            <List style={{cursor:"pointer"}}>
+                                                {friendData
+                                                    .filter((friend) => friend.name.toLowerCase().includes(search.toLowerCase()))
+                                                    .map((friend, index) => (
+                                                        <ListItem component={"button"} key={index} onClick={ () => toggleChat(friend) }/* alert(`Open chat with ${friend.name}`) */>
+                                                            {/*  {friendData && <Chat/>} */}
+                                                            <ListItemAvatar>
+                                                                <Avatar src={friend.avatar} />
+                                                            </ListItemAvatar>
+                                                            <ListItemText primary={friend.name} secondary={friend.lastMessage} />
+                                                        </ListItem>
+                                                    ))}
+                                            </List>
+                                        </div>
+                                    </Drawer>
+                                    {/* Render Chat Component When Chat is Open */}
+                                    {isChatOpen && selectedUser && (
+                                        <Chat currentUserId={currentUserId} recipientId={selectedUser.id} onClose={() => setIsChatOpen(false)} />
                                     )}
-                                </Grid2>
-                                <Grid2>
-                                    <ListItem>
-                                        <Badge
-                                            color="error"
-                                            variant={showNotification ? "dot" : "standard"}
-                                            onClick={() => setShowNotification(false)}
-                                        >
-                                            <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
-                                        </Badge>
-                                        {showNotification && (
-                                            <div style={{
-                                                position: "absolute",
-                                                background: "white",
-                                                padding: "10px",
-                                                borderRadius: "5px",
-                                                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                                                top: "50px",
-                                                right: "10px",
-                                            }}>
-                                                {notification}
-                                            </div>
-                                        )}
-                                    </ListItem>
-                                </Grid2>
-                                <Grid2>
-                                    <Link to={"/profile"}><AccountCircleIcon sx={{ fontSize: 40 }} color="primary" /></Link>
+                                    {/* <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button> */}
                                 </Grid2>
                             </Grid2>
+                            {/*    Notification icon */}
+                            <Grid2>
+                                <ListItem>
+                                    <Badge
+                                        color="error"
+                                        variant={showNotification ? "dot" : "standard"}
+                                        onClick={() => setShowNotification(false)}
+                                    >
+                                        <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
+                                    </Badge>
+                                    {showNotification && (
+                                        <div style={{
+                                            position: "absolute",
+                                            background: "white",
+                                            padding: "10px",
+                                            borderRadius: "5px",
+                                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                                            top: "50px",
+                                            right: "10px",
+                                        }}>
+                                            {notification}
+                                        </div>
+                                    )}
+                                </ListItem>
+                            </Grid2>
+                            {/*     profile icon */}
+                            <Grid2>
+                                <Link to={"/profile"}><AccountCircleIcon sx={{ fontSize: 40 }} color="primary" /></Link>
+                            </Grid2>
                         </Grid2>
+
                     </AppBar>
                 </Box>
             </ListItem>
-        </Grid2>
+        </Grid2 >
     )
 }
 /* const autoData=[

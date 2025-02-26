@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
+import { Grid2,Box, Card, CardContent, Typography, TextField, Button, ListItem } from "@mui/material";
 import socket from "../middleware/socket";
-
-export default function Chat({currentUserId, recipientId }) {
+import CloseIcon from '@mui/icons-material/Close';
+export default function Chat({ currentUserId, recipientId, onClose }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
@@ -97,9 +97,19 @@ export default function Chat({currentUserId, recipientId }) {
         >
             <Card sx={{ width: "400px", maxWidth: "100%", boxShadow: 3 }}>
                 <CardContent>
-                    <Typography variant="h5" textAlign="center" gutterBottom>
-                        Real-Time Chat
-                    </Typography>
+                    <Grid2 container>
+                        <Grid2>
+                            <ListItem>
+                                <Typography variant="h5" textAlign="center" gutterBottom>
+                                    Real-Time Chat
+                                </Typography>
+                            </ListItem>
+                        </Grid2>
+                        <Grid2>
+                            <ListItem><CloseIcon onClick={onClose}/></ListItem>
+                        </Grid2>
+
+                    </Grid2>
 
                     <Box
                         sx={{
