@@ -1,18 +1,20 @@
 import { Grid2, ListItem, Typography, Box, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useData } from "../context/data";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
     const navigate = useNavigate();
+    const {setLoggedIn}=useData();
     function handleLogin() {
         const payload = {
             email: email,
             password: password
         }
         console.log(payload)
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/user/signin`, {
+    /*     fetch(`${import.meta.env.VITE_BACKEND_URL}/user/signin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -20,17 +22,51 @@ export default function Login() {
             body: JSON.stringify(payload)
         }
         ).then((response) => {
-            console.log(response)
+            response.json();
             if (response.ok) {
                 alert("Login successful");
                 setTimeout(() => {
                     navigate("/:home")
                 })
             }
-        }).catch((error) => {
+        }) .then((data)=>{
+            if(data && data.token){
+                setLoggedIn(true)
+                window.sessionStorage.setItem("_token",JSON.stringify(data.token))
+            }
+        }) .catch((error) => {
             console.log(error)
         })
-    }
+    } */
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/user/signin`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Response Data:", data);
+
+        if (data.success) {
+            alert("Login successful");
+            setLoggedIn(true)
+            window.sessionStorage.setItem("_token", JSON.stringify(data.token));
+
+            setTimeout(() => {
+                navigate("/:home"); 
+            }, 1000);
+        } else {
+            alert(data.message || "Login failed");
+        }
+    })
+    .catch(error => {
+        console.error("Login Error:", error);
+        alert("Something went wrong. Please try again.");
+    });
+
+}
     return (
         <Grid2 container justifyContent={"center"} alignContent={"center"}>
 

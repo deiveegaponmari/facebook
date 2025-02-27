@@ -32,12 +32,12 @@ function App() {
           }
           {
             isLoggedIn && <>
-             
+              <Route path='/:home' Component={mycomp}></Route>
+           <Route path='/profile' Component={ProfilePage}></Route>
 
             </>
           }
-           <Route path='/:home' Component={mycomp}></Route>
-           <Route path='/profile' Component={ProfilePage}></Route>
+          
            
           <Route path='*' Component={NotFound}></Route>
         </Routes>
