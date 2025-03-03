@@ -100,8 +100,8 @@ const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websock
     type: "video"
   }
 ]; */
-const NewsFeed = (props) => {
-  const { setUploadFiles, uploadFiles, staticData = false } = props;
+const CardUpload = (props) => {
+  const {  staticData = false } = props;
   const [posts, setPosts] = useState([]);
   const [commentData, setCommentData] = useState({}); // Stores comment input for each post
   const [comments, setComments] = useState({}); // Stores list of comments for each post
@@ -109,12 +109,22 @@ const NewsFeed = (props) => {
    const [sharePost, setSharePost] = useState(null); // Store the post to be shared
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/newsfeed/data`)
+    if(staticData){
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/newsfeed/data`)
       .then((response) => setPosts(response.data))
       .catch((error) => {
         console.log(error)
       })
-  }, [])
+    } else{
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
+        .then((response) => setPosts(response.data))
+        .catch((error) => {
+          console.log(error)
+          alert("Failed to load stories")
+        })
+    }
+   
+  }, [staticData])
   // Toggle comment input visibility
   const handleCommentClick = (postId) => {
     setCommentData((prev) => ({
@@ -123,34 +133,14 @@ const NewsFeed = (props) => {
     }));
   };
 
-  useEffect(() => {
-    if (staticData) {
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
-        .then((response) => {
-          console.log('kkkkkkkkkk response.data:-- ', response.data);
-          let fullList = [];
-          for (let i in response.data) {
-            let singleObj = response.data[i];
-            console.log('kkkkkk i:-- ', singleObj);
-            fullList.push({
-              id: i,
-              username: "Taylor Swift",
-              avatar: "https://i.pravatar.cc/150?img=6",
-              time: "6d ago",
-              content: "Here’s a sneak peek of my new music video! 🎶",
-              media: singleObj?.src,
-              type: singleObj?.type
-            });
-          }
-          setPosts(fullList);
-        })
-        /* setStoryData(response.data)) */
+/*   useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
+        .then((response) => setPosts(response.data))
         .catch((error) => {
           console.log(error)
           alert("Failed to load stories")
         })
-    }
-  }, [staticData])
+    }, [staticData]) */
 
   // Update comment input value
   const handleInputChange = (postId, value) => {
@@ -240,8 +230,8 @@ const NewsFeed = (props) => {
   };
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20 }}>
-      {posts.map((post) => (
-        <Card key={post.id} style={{ marginBottom: 20 }}>
+      {posts.map((post,index) => (
+        <Card key={`${index}-${post.id}`} style={{ marginBottom: 20 }}>
           <CardHeader
             avatar={<Avatar src={post.avatar} />}
             action={<IconButton><MoreVert /></IconButton>}
@@ -299,7 +289,7 @@ const NewsFeed = (props) => {
           )}
         </Card>
       ))}
-
+{/* open social media icons from share button after click */}
      <div>
       <Dialog open={Boolean(sharePost)} onClose={() => setSharePost(null)}>
         <DialogTitle>
@@ -325,4 +315,4 @@ const NewsFeed = (props) => {
   );
 };
 
-export default NewsFeed;
+export default CardUpload;

@@ -8,33 +8,45 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import Chat from "./Chat";
 import socket from "../middleware/socket";
-import FriendUser from "./FriendUser";
+//import FriendUser from "./FriendUser";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
 import { useData } from "../context/data";
+import FriendRequest from '../components/FriendRequest';
 
 
-export default function Navbar() {
+export default function Navbar({setSelectedUser}) {
     const navigate = useNavigate();
     const [friendlistopen, setfriendlistopen] = useState(false)
     const [newMessage, setNewMessage] = useState(false);
     const [open, setOpen] = useState(false);
     const [friendData, setFriendData] = useState([])
     const [search, setSearch] = useState("");
-    const [selectedUser, setSelectedUser] = useState(null)
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const autoData = [
-        { label: "vanitha" },
-        { label: "Jebastin" },
-        { label: "uma" },
-    ]
+    const [autoData, setAutoData] = useState([]);
+    /*   const autoData = [
+          { label: "vanitha" },
+          { label: "Jebastin" },
+          { label: "uma" },
+      ] */
 
+    // Fetch all user data for autocomplete
+    useEffect(() => {
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/data`)
+            .then((response) => {
+                setAutoData(response.data.map(user => ({
+                    label: user.username,
+                    id: user._id
+                })));
+            })
+            .catch((error) => console.log(error));
+    }, []);
     const [notification, setNotification] = useState("");
 
     const [showNotification, setShowNotification] = useState(false);
- const {decodedToken,isLoggedIn} =useData();
- const currentUserId=decodedToken?.id;
- console.log(currentUserId);
+    const { decodedToken, isLoggedIn } = useData();
+    const currentUserId = decodedToken?.id;
+    console.log(currentUserId);
 
     useEffect(() => {
         socket.on("receive_message", (message) => {
@@ -47,18 +59,29 @@ export default function Navbar() {
     }, []);
     const toggleDrawer = () => setOpen(!open);
 
-    useEffect(() => {
+    /* useEffect(() => {
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendlist/data`)
-            .then((response) => setFriendData(response.data))
+            .then((response) =>console.log(response))  setautoData(response.data.map(user =>({ label:user.username})))) 
             .catch((error) => {
                 console.log(error)
             })
-    }, [])
+    }, []) */
     function toggleChat(user) {
         setSelectedUser(user);
         setIsChatOpen(true)
         // setNewMessage(false);
     }
+    // Handle user selection
+    const handleUserSelect = (_, value) => {
+        if (value) {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${value.id}`)
+                .then(response =>{
+                    setSelectedUser(response.data) // Store selected user's data
+                    navigate(`/:${value.id}`)
+                } )
+                .catch(error => console.log(error));
+        }
+    };
     return (
         <Grid2>
             <ListItem>
@@ -66,43 +89,31 @@ export default function Navbar() {
                     <AppBar position="static" color="transparent">
                         <Grid2 container justifyContent={"space-between"} >
                             <Grid2 container gap={1}>
+                                {/* facebook logo */}
                                 <Grid2>
                                     <ListItem>
                                         <a href="#">  <img src="https://img.freepik.com/premium-vector/art-illustration_929495-41.jpg"
                                             alt="facebook logo" style={{ width: "45px", height: "45px" }} /></a>
                                     </ListItem>
                                 </Grid2>
+                                {/*  search friends field */}
                                 <Grid2>
                                     <ListItem>
-
+  
                                         <Autocomplete
                                             disablePortal
                                             options={autoData}
+                                            getOptionLabel={(option) => option.label}
                                             sx={{ width: 300 }}
                                             renderInput={(params) => <TextField {...params} label="Search Facebook" />}
-                                            onChange={(_, value) => {
-                                                if (value) {
-                                                    navigate("/" + value.label);
-                                                }
-                                            }}
+                                            onChange={handleUserSelect}
                                         />
-
-
-
-                                        {/* <FormControl variant="standard">
-                                            <Input
-                                                id="input-with-icon-adornment" placeholder="Search Facebook"
-                                                startAdornment={
-                                                    <InputAdornment position="start">
-                                                        <SearchIcon />
-                                                    </InputAdornment>
-                                                }
-                                            />
-                                        </FormControl> */}
-
+                                        {/* Render FriendUser component when a user is selected */}
+                                       {/*  {selectedUser && <FriendRequest userData={selectedUser} />} */}
                                     </ListItem>
                                 </Grid2>
                             </Grid2>
+                            {/*    Home icon */}
                             <Grid2 container gap={2} padding={1}>
                                 <Grid2>
                                     <Link to={"/home"}><HomeIcon color="primary" sx={{ fontSize: 40 }} /></Link>
@@ -137,11 +148,11 @@ export default function Navbar() {
                                             />
 
                                             {/* Friends List */}
-                                            <List style={{cursor:"pointer"}}>
+                                            <List style={{ cursor: "pointer" }}>
                                                 {friendData
                                                     .filter((friend) => friend.name.toLowerCase().includes(search.toLowerCase()))
                                                     .map((friend, index) => (
-                                                        <ListItem component={"button"} key={index} onClick={ () => toggleChat(friend) }/* alert(`Open chat with ${friend.name}`) */>
+                                                        <ListItem component={"button"} key={index} onClick={() => toggleChat(friend)}/* alert(`Open chat with ${friend.name}`) */>
                                                             {/*  {friendData && <Chat/>} */}
                                                             <ListItemAvatar>
                                                                 <Avatar src={friend.avatar} />
@@ -196,7 +207,4 @@ export default function Navbar() {
         </Grid2 >
     )
 }
-/* const autoData=[
-    {id:1,accessTimeIcon:<AccessTimeIcon/>,name:"vanitha",clearIcon:<ClearIcon/>}
-] */
 

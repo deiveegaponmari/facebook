@@ -5,8 +5,8 @@ import { Padding } from "@mui/icons-material";
 //import.meta.env.VITE_BACKEND_URL;
 
 export default function Signup() {
-    const [firstName, setfirstName] = useState("")
-    const [lastName, setlastName] = useState("");
+    const [userName, setUserName] = useState("")
+    const [avatar, setAvatar] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
     const navigate = useNavigate();
@@ -14,8 +14,8 @@ export default function Signup() {
 //console.log("API URL:", API_URL);
     function saveData() {
         const payload = {
-            firstName: firstName,
-            lastName: lastName,
+            username: userName,
+            avatar: avatar,
             email: email,
             password: password
         }
@@ -54,14 +54,14 @@ export default function Signup() {
                             </Grid2>
                             <Grid2>
                                 <ListItem>
-                                    <TextField id="firstName" label="firstName" variant="outlined" placeholder="firstName"
-                                        onChange={(e) => setfirstName(e.target.value)} />
+                                    <TextField id="username" label="username" variant="outlined" placeholder="userName"
+                                        onChange={(e) => setUserName(e.target.value)} />
                                 </ListItem>
                             </Grid2>
                             <Grid2>
                                 <ListItem>
-                                    <TextField id="lastName" label="lastName" variant="outlined" placeholder="lastName"
-                                        onChange={(e) => setlastName(e.target.value)} />
+                                    <TextField id="avatar" label="avatar" variant="outlined" placeholder="avatar"
+                                        onChange={(e) => setAvatar(e.target.value)} />
                                 </ListItem>
                             </Grid2>
                             <Grid2>

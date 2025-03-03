@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import './App.css';
 import { Routes, Route } from "react-router-dom";
 import Signup from './pages/Signup';
@@ -13,11 +13,12 @@ import ProfilePage from './pages/ProfilePage';
 
 function App() {
   
+  const [selectedUser, setSelectedUser] = useState(null)
   const { isLoggedIn } = useData();
   const mycomp = () => {
     return (<Grid2>
-      <Navbar/>
-      <FaceBookPage/>
+      <Navbar setSelectedUser={setSelectedUser}/>
+      <FaceBookPage selectedUser={selectedUser}/>
     </Grid2>
     )
   }

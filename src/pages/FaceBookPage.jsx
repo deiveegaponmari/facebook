@@ -1,14 +1,16 @@
-import React, {  useState } from "react";
+import React, {  useState ,useEffect} from "react";
 import { Grid2, ListItem } from "@mui/material";
 import Filter from "../components/Filter";
 import FriendRequest from "../components/FriendRequest";
 import Status from "./Home/Status";
 import CardUpload from "../components/CardUpload";
 import Story from "./Home/Story";
-import { Routes,Route } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-export default function FaceBookPage(){
+export default function FaceBookPage({selectedUser}){
   const [uploadFiles, setUploadFiles] = useState([])
+  const [friendData,setFriendData]=useState(null);
   const users={
     vanitha:[
       {
@@ -36,6 +38,21 @@ export default function FaceBookPage(){
     ]
   }
   console.log('llll uploadFiles :- ', uploadFiles);
+  console.log("selected user",selectedUser)
+
+  const { userId } = useParams(); // Get selected user ID from URL
+   
+
+    useEffect(() => {
+        if (userId) {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${userId}`)
+                .then(response =>{
+                  setFriendData(response.data)
+                  
+                } )
+                .catch(error => console.error("Error fetching user data:", error));
+        }
+    }, [userId]); // Fetch user data when userId changes
 return (
       <Grid2 container spacing={2}>
         <Grid2 >
@@ -51,7 +68,8 @@ return (
           </Grid2>
           <Grid2 size={6}>
             <ListItem>
-            <FriendRequest users={users} />
+             {/*  {friendData &&  <FriendRequest users={friendData} />} */}
+            <FriendRequest selectedUser={selectedUser}/>
             </ListItem>
           </Grid2>
         </Grid2>
@@ -59,11 +77,11 @@ return (
         <Grid2 container spacing={1}>
            <Grid2 size={6}>
             <ListItem>
-               <CardUpload/> </ListItem>
+               <CardUpload staticData={true}/> </ListItem>
            </Grid2>
            <Grid2 size={6}>
             <ListItem>
-             <CardUpload staticData={true} />
+             <CardUpload  staticData={false}/>
             </ListItem>
            </Grid2>
         </Grid2>
