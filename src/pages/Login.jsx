@@ -55,7 +55,8 @@ export default function Login() {
             window.sessionStorage.setItem("_token", JSON.stringify(data.token));
 
             setTimeout(() => {
-                navigate("/:home"); 
+                window.location.href = '/:home';
+                // navigate("/:home"); 
             }, 1000);
         } else {
             alert(data.message || "Login failed");
