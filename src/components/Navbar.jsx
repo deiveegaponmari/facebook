@@ -28,8 +28,9 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
     const [showNotification, setShowNotification] = useState(false);
     const { decodedToken, isLoggedIn } = useData();
     const [counter, setCounter] = useState(0);
-    const currentUserId = decodedToken;
+    const currentUserId = decodedToken || {};
     console.log(currentUserId);
+    console.log("confirmuser",confirmUser)
 
     // Fetch all user data for autocomplete
     useEffect(() => {
@@ -42,7 +43,8 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
             })
             .catch((error) => console.log(error));
     }, []);
- //handle friendrequest notification
+
+ //handle socket
  useEffect(() => {
     socket.on("receiveFriendRequest", ({ senderId }) => {
         console.log("You received a friend request from:", senderId);
@@ -61,10 +63,9 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
     useEffect(() => {
         let intervalId;
         intervalId = setInterval(() => {
-            // setCounter((prevCounter) => prevCounter + 1);
-            // console.log('kkkkk counter: -', counter);
-            socket.emit("registerUser", currentUserId.userId);
-
+           //handle online users registration
+            socket.emit("registerUser", currentUserId?.userId);
+            //handle friend request
             socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
                 console.log("receiverId:-- ", receiverId);
                 console.log("currentUserId.userId:-- ", currentUserId.userId);
@@ -75,15 +76,17 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
             socket.on("notification", ({message,receiverId}) => {
                 console.log('message :------ message :-- ', message)
-                let apiData = [{name:'vvv', image: ''}];
-                console.log("data :-- ",[apiData]);
-                console.log("message :-- ",message);
+                /* let apiData = [{name:'vvv', image: ''}];
+                console.log("data :-- ",[apiData]); */
                 console.log("receiverId :-- ",receiverId);
                 //api call
-                axios.get("")
-                setfriendReqUser(apiData);
-                setNotification(message);
-                setShowNotification(true)
+              /*   axios.get("") */
+                //setfriendReqUser(apiData);
+                if(receiverId ==currentUserId.userId){
+                    setNotification(message);
+                    setShowNotification(true)
+                }
+              
             })
 
             socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
@@ -102,7 +105,7 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
         return () => clearInterval(intervalId);
     }, []);
     //handle user register and friendRequest notification
-    useEffect(() => {
+   /*  useEffect(() => {
         socket.emit("registerUser", currentUserId.userId);
 
         socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
@@ -126,7 +129,7 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
             socket.off("receiveFriendRequest");
             socket.off("friendRequestCanceled");
         };
-    }, [currentUserId]);
+    }, [currentUserId]); */
     //handle real time chat notification
     useEffect(() => {
         socket.on("receive_message", ({message}) => {
@@ -233,23 +236,28 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
                                             {/* Friends List */}
                                             <List style={{ cursor: "pointer" }}>
-                                                {friendData
+                                            {/*     {friendData
                                                     .filter((friend) => friend.name.toLowerCase().includes(search.toLowerCase()))
                                                     .map((friend, index) => (
-                                                        <ListItem component={"button"} key={index} onClick={() => toggleChat(friend)}/* alert(`Open chat with ${friend.name}`) */>
-                                                            {/*  {friendData && <Chat/>} */}
+                                                        <ListItem component={"button"} key={index} onClick={() => toggleChat(friend)}>
                                                             <ListItemAvatar>
                                                                 <Avatar src={friend.avatar} />
                                                             </ListItemAvatar>
                                                             <ListItemText primary={friend.name} secondary={friend.lastMessage} />
                                                         </ListItem>
-                                                    ))}
+                                                    ))} */}
+                                                   {/*   <ListItem component={"button"} key={index} onClick={() => toggleChat({confirmUser})}>
+                                                            <ListItemAvatar>
+                                                                <Avatar src={confirmUser.avatar} />
+                                                            </ListItemAvatar>
+                                                            <ListItemText primary={confirmUser.username}  />
+                                                        </ListItem>  */}
                                             </List>
                                         </div>
                                     </Drawer>
                                     {/* Render Chat Component When Chat is Open */}
                                     {isChatOpen && confirmUser && (
-                                        <Chat currentUserId={currentUserId.userId} recipientId={confirmUser.id} onClose={() => setIsChatOpen(false)} />
+                                        <Chat currentUserId={currentUserId.userId} recipientId={confirmUser} onClose={() => setIsChatOpen(false)} />
                                     )}
                                     {/* <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button> */}
                                 </Grid2>
