@@ -1,38 +1,40 @@
-import { Grid2, ListItem, Button } from "@mui/material";
-import { useState } from "react";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
+import { Grid, Avatar, Button, Typography, Stack, Box } from "@mui/material";
 import PostModal from "./Home/PostModal";
 import CardUpload from "../components/CardUpload";
+import { useEffect, useState } from "react";
+import { useData } from "../context/data";
+import axios from "axios";
+
 export default function ProfilePage() {
-    const [modelOpen, setModalOpen] = useState(false)
-    const [postModal, setPostModal] = useState(false)
-    const [uploadFiles, setUploadFiles] = useState([])
+    const [modelOpen, setModalOpen] = useState(false);
+    const [uploadFiles, setUploadFiles] = useState([]);
+    const [data, setData] = useState({});
+    const { decodedToken } = useData();
+    const currentId = decodedToken.userId;
+
+    useEffect(() => {
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${currentId}`)
+            .then((res) => {
+                setData(res.data);
+            });
+    }, [currentId]);
+
     return (
-        <Grid2 container direction={"column"} justifyContent={"center"} alignContent={"center"} spacing={3}>
-            <Grid2>
-                <ListItem>
-                    <img src="https://images.pexels.com/photos/56866/garden-rose-red-pink-56866.jpeg?auto=compress&cs=tinysrgb&w=400"
-                         width={"100%"}
-                        alt="rose" />
-                </ListItem>
-            </Grid2><br /><br /><br /><br /><br /><br />
-            <Grid2 container  >
-                <Grid2 >
-                    <ListItem><AccountCircleIcon fontSize="large" color="primary" /></ListItem>
-                </Grid2>
-                <Grid2>
-                    <ListItem>
-                        <Button variant="outlined" onClick={() => setModalOpen(true)}>what's on your mind?</Button>
-                        <PostModal open={modelOpen} setModalOpen={setModalOpen} handleClose={() => setModalOpen(false)} setUploadFiles={setUploadFiles} />
-                    </ListItem>
-                </Grid2>
-            </Grid2>
-            <Grid2>
-                <ListItem>
-                    <CardUpload setUploadFiles={setUploadFiles} uploadFiles={uploadFiles} />
-                </ListItem>
-            </Grid2>
-        </Grid2>
-    )
+        <Grid container direction="column" alignItems="center" spacing={3} sx={{ mt: 4 }}>
+            {/* Profile Header */}
+            <Stack spacing={2} alignItems="center">
+                <Avatar src={data.avatar} alt={data.username} sx={{ width: 100, height: 100 }} />
+                <Typography variant="h5">{data.username}</Typography>
+                <Button variant="outlined" sx={{ textTransform: "none", borderRadius: "20px" }} onClick={() => setModalOpen(true)}>
+                    What's on your mind, {data.username}?
+                </Button>
+                <PostModal open={modelOpen} setModalOpen={setModalOpen} handleClose={() => setModalOpen(false)} setUploadFiles={setUploadFiles} />
+            </Stack>
+
+            {/* Upload Section */}
+            <Box width="100%" display="flex" justifyContent="center">
+                <CardUpload setUploadFiles={setUploadFiles} uploadFiles={uploadFiles} />
+            </Box>
+        </Grid>
+    );
 }

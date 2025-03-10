@@ -6,8 +6,8 @@ export default function Chat({ currentUserId, recipientId, onClose }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
-    console.log("currentuserid",currentUserId.username);
-    console.log("recipientid",recipientId.username)
+    console.log("currentuserid",currentUserId);
+    console.log("recipientid",recipientId)
     //console.log(message)
     /*   useEffect(() => {
           if (!currentUserId) return;

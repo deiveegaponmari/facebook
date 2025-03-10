@@ -29,8 +29,9 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
     const { decodedToken, isLoggedIn } = useData();
     const [counter, setCounter] = useState(0);
     const currentUserId = decodedToken || {};
+    const[chatUser,setChatUser]=useState([]);
     console.log(currentUserId);
-    console.log("confirmuser",confirmUser)
+   // console.log("confirmuser", confirmUser)
 
     // Fetch all user data for autocomplete
     useEffect(() => {
@@ -44,26 +45,26 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
             .catch((error) => console.log(error));
     }, []);
 
- //handle socket
- useEffect(() => {
-    socket.on("receiveFriendRequest", ({ senderId }) => {
-        console.log("You received a friend request from:", senderId);
-        setNotification("You have a new friend request!");
-        setShowNotification(true);
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${senderId}`)
-        .then((res)=>{
-            setfriendReqUser(res.data)
-        })
-    });
+    //handle socket
+    useEffect(() => {
+        socket.on("receiveFriendRequest", ({ senderId }) => {
+            console.log("You received a friend request from:", senderId);
+            setNotification("You have a new friend request!");
+            setShowNotification(true);
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${senderId}`)
+                .then((res) => {
+                    setfriendReqUser(res.data)
+                })
+        });
 
-    return () => {
-        socket.off("receiveFriendRequest");
-    };
-}, []);
+        return () => {
+            socket.off("receiveFriendRequest");
+        };
+    }, []);
     useEffect(() => {
         let intervalId;
         intervalId = setInterval(() => {
-           //handle online users registration
+            //handle online users registration
             socket.emit("registerUser", currentUserId?.userId);
             //handle friend request
             socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
@@ -74,19 +75,19 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                 }
             });
 
-            socket.on("notification", ({message,receiverId}) => {
+            socket.on("notification", ({ message, receiverId }) => {
                 console.log('message :------ message :-- ', message)
                 /* let apiData = [{name:'vvv', image: ''}];
                 console.log("data :-- ",[apiData]); */
-                console.log("receiverId :-- ",receiverId);
+                console.log("receiverId :-- ", receiverId);
                 //api call
-              /*   axios.get("") */
+                /*   axios.get("") */
                 //setfriendReqUser(apiData);
-                if(receiverId ==currentUserId.userId){
+                if (receiverId == currentUserId.userId) {
                     setNotification(message);
                     setShowNotification(true)
                 }
-              
+
             })
 
             socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
@@ -105,34 +106,34 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
         return () => clearInterval(intervalId);
     }, []);
     //handle user register and friendRequest notification
-   /*  useEffect(() => {
-        socket.emit("registerUser", currentUserId.userId);
-
-        socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
-            if (receiverId === currentUserId.userId) {
-                console.log("You received a friend request!");
-            }
-        });
-
-        socket.on("notification", (message) => {
-            setNotification(message);
-            setShowNotification(true)
-        })
-
-        socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
-            if (receiverId === currentUserId.userId) {
-                console.log("A friend request was canceled!");
-            }
-        });
-
-        return () => {
-            socket.off("receiveFriendRequest");
-            socket.off("friendRequestCanceled");
-        };
-    }, [currentUserId]); */
+    /*  useEffect(() => {
+         socket.emit("registerUser", currentUserId.userId);
+ 
+         socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
+             if (receiverId === currentUserId.userId) {
+                 console.log("You received a friend request!");
+             }
+         });
+ 
+         socket.on("notification", (message) => {
+             setNotification(message);
+             setShowNotification(true)
+         })
+ 
+         socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
+             if (receiverId === currentUserId.userId) {
+                 console.log("A friend request was canceled!");
+             }
+         });
+ 
+         return () => {
+             socket.off("receiveFriendRequest");
+             socket.off("friendRequestCanceled");
+         };
+     }, [currentUserId]); */
     //handle real time chat notification
     useEffect(() => {
-        socket.on("receive_message", ({message}) => {
+        socket.on("receive_message", ({ message }) => {
             console.log("New message received:", message);
             setNewMessage(message); // Show notification badge
         });
@@ -144,10 +145,11 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
 
     function toggleChat(user) {
-        setSelectedUser(user);
+        setChatUser(user);
         setIsChatOpen(true)
         // setNewMessage(false);
     }
+    console.log("chatuser",chatUser.receiverId)
     // Handle user selection
     const handleUserSelect = (_, value) => {
         if (value) {
@@ -160,7 +162,15 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
         }
     };
 
-   
+    useEffect(() => {
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/accepted/${currentUserId.userId}`)
+            .then(response => {
+                console.log("Accepted friends:", response.data);
+                setFriendData(response.data);
+            })
+            .catch(error => console.error("Error fetching accepted friends:", error));
+    }, [currentUserId]);
+
 
     return (
         <Grid2>
@@ -236,8 +246,20 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
                                             {/* Friends List */}
                                             <List style={{ cursor: "pointer" }}>
-                                            {/*     {friendData
-                                                    .filter((friend) => friend.name.toLowerCase().includes(search.toLowerCase()))
+                                                {friendData.length > 0 ? (
+                                                    friendData.map((friend, index) => (
+                                                        <ListItem key={index} button onClick={() => toggleChat(friend)}>
+                                                            <ListItemAvatar>
+                                                                <Avatar src={friend.receiverId.avatar} />
+                                                            </ListItemAvatar>
+                                                            <ListItemText primary={friend.receiverId.username} />
+                                                        </ListItem>
+                                                    ))
+                                                ) : (
+                                                    <Typography>No friends yet.</Typography>
+                                                )}
+                                                {/*  {friendData
+                                                    .filter((friend) => friend.name.toLowerCase().includes(search.toLowerCase())) 
                                                     .map((friend, index) => (
                                                         <ListItem component={"button"} key={index} onClick={() => toggleChat(friend)}>
                                                             <ListItemAvatar>
@@ -246,18 +268,13 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                                             <ListItemText primary={friend.name} secondary={friend.lastMessage} />
                                                         </ListItem>
                                                     ))} */}
-                                                   {/*   <ListItem component={"button"} key={index} onClick={() => toggleChat({confirmUser})}>
-                                                            <ListItemAvatar>
-                                                                <Avatar src={confirmUser.avatar} />
-                                                            </ListItemAvatar>
-                                                            <ListItemText primary={confirmUser.username}  />
-                                                        </ListItem>  */}
                                             </List>
                                         </div>
                                     </Drawer>
                                     {/* Render Chat Component When Chat is Open */}
-                                    {isChatOpen && confirmUser && (
-                                        <Chat currentUserId={currentUserId.userId} recipientId={confirmUser} onClose={() => setIsChatOpen(false)} />
+                                    
+                                    {isChatOpen && chatUser&& (
+                                        <Chat currentUserId={currentUserId.userId} recipientId={chatUser.receiverId._id} onClose={() => setIsChatOpen(false)} />
                                     )}
                                     {/* <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button> */}
                                 </Grid2>
