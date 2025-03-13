@@ -1,4 +1,5 @@
-import {Grid2, ListItem, TextField, Autocomplete, Drawer, IconButton, Typography, List, ListItemAvatar, Avatar,
+import {
+    Grid2, ListItem, TextField, Autocomplete, Drawer, IconButton, Typography, List, ListItemAvatar, Avatar,
     ListItemText, Badge, Snackbar, Alert
 } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
@@ -81,7 +82,7 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
             console.log("Notification received:", data);
             setNotification((prev) => [...prev, data.message]); // Append new notification
             setShowNotification(true)
-          });
+        });
         return () => {
             socket.off("receiveFriendRequest");
             socket.off("notification");
@@ -93,8 +94,14 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
     const toggleDrawer = () => setOpen(!open);
 
     function toggleChat(user) {
+        console.log("chatuser", user);
+        // Check if user object exists and contains senderId & receiverId
+        if (!user || !user.senderId || !user.receiverId) {
+            console.error("Invalid user object passed to toggleChat:", user);
+            return;
+        }
         const recipientId = user.senderId._id === currentUserId.userId ? user.receiverId._id : user.senderId._id;
-
+        console.log("Recipient ID:", recipientId);
         if (chatUser?._id === recipientId) {
             setIsChatOpen(false); // Close chat
         } else {
@@ -123,7 +130,12 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
         const fetchFriends = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/accepted/${currentUserId.userId}`);
-                setFriendData(response.data);
+                if (response.data.length > 0) {
+                    console.log("Fetched Friends:", response.data);
+                    setFriendData(response.data);
+                } else {
+                    console.warn("No accepted friends found.");
+                }
             } catch (error) {
                 console.error("Error fetching accepted friends:", error);
             }
@@ -207,10 +219,11 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                             {/* Friends List */}
                                             <List style={{ cursor: "pointer" }}>
                                                 {Array.from(new Map(friendData.map(friend => {
-                                                    // Determine who the friend is (not the current user)
+                                                    
                                                     const friendInfo = friend.receiverId._id === currentUserId.userId ? friend.senderId : friend.receiverId;
-                                                    return [friendInfo._id, friendInfo]; // Ensure each friend is unique
+                                                    return [friendInfo._id, friendInfo]; 
                                                 })).values()).map((friend, index) => (
+                                                   
                                                     <ListItem key={index} button onClick={() => toggleChat(friend)}>
                                                         <ListItemAvatar>
                                                             <Avatar src={friend.avatar} />
@@ -240,7 +253,7 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                             <Badge
                                                 color="error"
                                                 variant={showNotification ? "dot" : "standard"}
-                                                onClick={() => setShowNotification(!showNotification)} 
+                                                onClick={() => setShowNotification(!showNotification)}
                                             >
                                                 <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
                                             </Badge>
