@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Grid2, ListItem } from "@mui/material";
-//import Filter from "../components/Filter";
 import FriendRequest from "../components/FriendRequest";
 import Status from "./Home/Status";
 import CardUpload from "../components/CardUpload";
 import Story from "./Home/Story";
-//import { useParams } from "react-router-dom";
-//import axios from "axios";
 import { useData } from "../context/data";
 
 export default function FaceBookPage({ selectedUser }) {

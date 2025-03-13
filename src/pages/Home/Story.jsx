@@ -28,12 +28,6 @@ export default function Story(props) {
             console.log(error);
             alert("Failed to load stories");
         });
-     /*    axios.get(`${import.meta.env.VITE_BACKEND_URL}/media/getfile`)
-            .then((response) => setStoryData(response.data))
-            .catch((error) => {
-                console.log(error)
-                alert("Failed to load stories")
-            }) */
     }, [uploadFiles])
     console.log("storydata",storyData)
     return (
@@ -56,35 +50,6 @@ export default function Story(props) {
             ))
         )}
     </Grid2>
-      /*   <Grid2 container>
-            <Grid2 container spacing={2} justifyContent={'center'} alignItems={"center"}>
-                {storyData.map((item, index) => {
-                    console.log('files item:-- ', item)
-                    return <Card sx={{ maxWidth: 345 }} key={index}>
-                        {item.src ? (
-                            <>
-                                <CardMedia
-                                component="img" height="300" image={item.src} alt="post media"
-                                    sx={{ height: 140 }}
-                                />
-
-                            </>
-                        ) : (
-                            <CardMedia sx={{ height: 200 }}>
-                                <ReactPlayer
-                                    url={item.videoUrl}
-                                    playing={false}
-                                    controls={false}
-                                    muted={false}
-                                    width="100%"
-                                    height="100%" />
-                            </CardMedia>
-                        )}
-
-                    </Card>
-                })}
-            </Grid2>
-        </Grid2> */
 
     )
 } 

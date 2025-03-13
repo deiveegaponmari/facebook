@@ -1,9 +1,7 @@
 import { Grid2, ListItem, Avatar, Stack, Typography, Button } from "@mui/material";
-import { useParams } from "react-router-dom";
-import FriendReqModal from "./FriendReqModal";
-import { useState,useEffect } from "react";
+import { useState} from "react";
 import { io } from "socket.io-client";
-import axios from "axios";
+
 
 const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 
@@ -12,10 +10,6 @@ export default function FriendRequest({ selectedUser, currentUserId}) {
     const [modelOpen, setModalOpen] = useState(false)
     console.log("currentuserId is ", currentUserId.userId)
     const [requestSent, setRequestSent] = useState(false);
-    /* console.log(users)
-    const { home } = useParams();
-    console.log(home)
-    const userInformation = users[home] || []; */
     if (!selectedUser) {
         return <Typography variant="h6">No user found</Typography>;
     }
@@ -62,8 +56,6 @@ export default function FriendRequest({ selectedUser, currentUserId}) {
                 </Grid2>
                 <Grid2>
                     <ListItem>
-                        {/* <Button variant="contained" onClick={() => setModalOpen(true)}>Add Friend</Button>
-                        <FriendReqModal open={modelOpen} handleClose={() => setModalOpen(false)} /> */}
                         {requestSent
                          ?  <Button variant="contained" onClick={handleFriendCancel}>Cancel Request</Button>
                        : <Button variant="contained" onClick={handleFriendReq}>Add Friend</Button>

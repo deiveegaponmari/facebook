@@ -40,7 +40,6 @@ function App() {
             isLoggedIn && <>
               <Route path='/:home' Component={mycomp}></Route>
            <Route path='/profile' Component={ProfilePage}></Route>
-            {/* <Route path='/friends' Component={Friends} friendReqUser={friendReqUser}></Route> */}
             <Route path="/friends" element={<Friends friendReqUser={friendReqUser} selectedUser={selectedUser} setconfirmUser={setconfirmUser}/>} />
             </>
           }

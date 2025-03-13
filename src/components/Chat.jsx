@@ -8,30 +8,6 @@ export default function Chat({ currentUserId, recipientId, onClose }) {
     const messagesEndRef = useRef(null);
     console.log("currentuserid", currentUserId);
     console.log("recipientid", recipientId)
-    //console.log(message)
-    /*   useEffect(() => {
-          if (!currentUserId) return;
-  
-          socket.emit("register", currentUserId);
-  
-          socket.on("previous_messages").on("previous_messages", (prevMessages) => {
-              setMessages(prevMessages);
-          });
-  
-          socket.on("receive_message").on("receive_message", (data) => {
-              setMessages((prev) => [...prev, data]);
-          });
-  
-          socket.on("new_message_notification").on("new_message_notification", ({ senderId, message }) => {
-              alert(`New message from ${senderId}: ${message}`);
-          });
-  
-          return () => {
-              socket.off("previous_messages");
-              socket.off("receive_message");
-              socket.off("new_message_notification");
-          };
-      }, [currentUserId]); */
     useEffect(() => {
         if (!currentUserId) return;
 
@@ -68,31 +44,6 @@ export default function Chat({ currentUserId, recipientId, onClose }) {
             socket.off("new_message_notification", handleNewMessageNotification);
         };
     }, [currentUserId, recipientId]);
-
-    /*     useEffect(() => {
-          if (!currentUserId) return;
-  
-          socket.emit("registerUser", currentUserId);
-          socket.emit("load_messages", { senderId: currentUserId, recipientId });
-  
-          socket.on("previous_messages", (prevMessages) => {
-              setMessages(prevMessages);
-          });
-  
-          socket.on("receive_message", (data) => {
-              setMessages((prev) => [...prev, data]);
-          });
-  
-          socket.on("new_message_notification", ({ senderId, message }) => {
-              alert(`New message from ${senderId}: ${message}`);
-          });
-  
-          return () => {
-              socket.off("previous_messages");
-              socket.off("receive_message");
-              socket.off("new_message_notification");
-          };
-      }, [currentUserId, recipientId]); */
     const sendMessage = () => {
         if (!message.trim()) return;
 

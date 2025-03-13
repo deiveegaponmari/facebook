@@ -1,5 +1,4 @@
-import {
-    Grid2, ListItem, TextField, Autocomplete, Drawer, IconButton, Typography, List, ListItemAvatar, Avatar,
+import {Grid2, ListItem, TextField, Autocomplete, Drawer, IconButton, Typography, List, ListItemAvatar, Avatar,
     ListItemText, Badge, Snackbar, Alert
 } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
@@ -57,16 +56,11 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                 console.log("You received a friend request!");
                 setNotification("You have a new friend request!");
                 setShowNotification(true);
-                /*  axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${senderId}`)
-                     .then((res) => setfriendReqUser(res.data))
-                     .catch(err => console.error(err)); */
             }
         });
 
         socket.on("notification", ({ message, receiverId }) => {
             if (receiverId === currentUserId?.userId) {
-                /* setNotification(message);
-                setShowNotification(true); */
                 setNotification(message || "New Notification!");
                 setShowNotification(true)
             }
@@ -82,7 +76,12 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
             console.log("New message received:", message);
             setNewMessage(true);  // Only showing new message notification
         });
-
+        //handle like post
+        socket.on("notification", (data) => {
+            console.log("Notification received:", data);
+            setNotification((prev) => [...prev, data.message]); // Append new notification
+            setShowNotification(true)
+          });
         return () => {
             socket.off("receiveFriendRequest");
             socket.off("notification");
@@ -91,89 +90,8 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
         };
     }, [currentUserId]);
 
-    /*  useEffect(() => {
-         socket.on("receiveFriendRequest", ({ senderId }) => {
-             console.log("You received a friend request from:", senderId);
-             setNotification("You have a new friend request!");
-             setShowNotification(true);
-             axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${senderId}`)
-                 .then((res) => {
-                     setfriendReqUser(res.data)
-                 })
-         });
- 
-         return () => {
-             socket.off("receiveFriendRequest");
-         };
-     }, []); */
-    /* useEffect(() => {
-        let intervalId;
-        intervalId = setInterval(() => {
-          
-            socket.emit("registerUser", currentUserId?.userId);
-         
-            socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
-                console.log("receiverId:-- ", receiverId);
-                console.log("currentUserId.userId:-- ", currentUserId.userId);
-                if (receiverId === currentUserId.userId) {
-                    console.log("You received a friend request!");
-                }
-            });
-
-            socket.on("notification", ({ message, receiverId }) => {
-                console.log('message :------ message :-- ', message)
-             
-                console.log("receiverId :-- ", receiverId);
-                
-                if (receiverId == currentUserId.userId) {
-                    setNotification(message);
-                    setShowNotification(true)
-                }
-
-            })
-
-            socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
-                if (receiverId === currentUserId.userId) {
-                    console.log("A friend request was canceled!");
-                }
-            });
-
-            return () => {
-                socket.off("receiveFriendRequest");
-                socket.off("friendRequestCanceled");
-            };
-        }, 2000);
-
-
-        return () => clearInterval(intervalId);
-    }, []); */
-    //handle real time chat notification
-    /*   useEffect(() => {
-          socket.on("receive_message", ({ message }) => {
-              console.log("New message received:", message);
-              setNewMessage(message); 
-          });
-          return () => {
-              socket.off("receive_message");
-          };
-      }, []); */
     const toggleDrawer = () => setOpen(!open);
 
-
-    /*   function toggleChat(user) {
-          setChatUser(user);
-          setIsChatOpen(true)
-          
-      } */
-  /*   function toggleChat(user) {
-        if (chatUser?._id === user._id) {
-            setIsChatOpen(false);  // Close chat 
-        } else {
-            setChatUser(user);
-            setIsChatOpen(true);
-            setNewMessage(false); // Clear new message notification
-        }
-    } */
     function toggleChat(user) {
         const recipientId = user.senderId._id === currentUserId.userId ? user.receiverId._id : user.senderId._id;
 
@@ -199,14 +117,6 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
         }
     };
 
-    /*  useEffect(() => {
-         axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/accepted/${currentUserId.userId}`)
-             .then(response => {
-                 console.log("Accepted friends:", response.data);
-                 setFriendData(response.data);
-             })
-             .catch(error => console.error("Error fetching accepted friends:", error));
-     }, [currentUserId]); */
     useEffect(() => {
         if (!currentUserId?.userId) return;
 
@@ -250,8 +160,6 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                             renderInput={(params) => <TextField {...params} label="Search Facebook" />}
                                             onChange={handleUserSelect}
                                         />
-                                        {/* Render FriendUser component when a user is selected */}
-                                        {/*  {selectedUser && <FriendRequest userData={selectedUser} />} */}
                                     </ListItem>
                                 </Grid2>
                             </Grid2>
@@ -298,77 +206,61 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
                                             {/* Friends List */}
                                             <List style={{ cursor: "pointer" }}>
-                                                {friendData.length > 0 ? (
-                                                    friendData.map((friend, index) => (
-                                                        <ListItem key={index} button onClick={() => toggleChat(friend)}>
-                                                            <ListItemAvatar>
-                                                                <Avatar src={friend.receiverId.avatar} />
-                                                            </ListItemAvatar>
-                                                            <ListItemText primary={friend.receiverId.username} />
-                                                        </ListItem>
-                                                    ))
-                                                ) : (
-                                                    <Typography>No friends yet.</Typography>
-                                                )}
-                                                {/*  {friendData
-                                                    .filter((friend) => friend.name.toLowerCase().includes(search.toLowerCase())) 
-                                                    .map((friend, index) => (
-                                                        <ListItem component={"button"} key={index} onClick={() => toggleChat(friend)}>
-                                                            <ListItemAvatar>
-                                                                <Avatar src={friend.avatar} />
-                                                            </ListItemAvatar>
-                                                            <ListItemText primary={friend.name} secondary={friend.lastMessage} />
-                                                        </ListItem>
-                                                    ))} */}
+                                                {Array.from(new Map(friendData.map(friend => {
+                                                    // Determine who the friend is (not the current user)
+                                                    const friendInfo = friend.receiverId._id === currentUserId.userId ? friend.senderId : friend.receiverId;
+                                                    return [friendInfo._id, friendInfo]; // Ensure each friend is unique
+                                                })).values()).map((friend, index) => (
+                                                    <ListItem key={index} button onClick={() => toggleChat(friend)}>
+                                                        <ListItemAvatar>
+                                                            <Avatar src={friend.avatar} />
+                                                        </ListItemAvatar>
+                                                        <ListItemText primary={friend.username} />
+                                                    </ListItem>
+                                                ))}
                                             </List>
                                         </div>
                                     </Drawer>
                                     {/* Render Chat Component When Chat is Open */}
 
                                     {isChatOpen && chatUser && (
-                                       /*  <Chat currentUserId={currentUserId.userId} recipientId={chatUser.receiverId._id} onClose={() => setIsChatOpen(false)} /> */
-                                       <Chat 
-                                       currentUserId={currentUserId.userId} 
-                                       recipientId={chatUser.senderId._id === currentUserId.userId ? chatUser.receiverId._id : chatUser.senderId._id}
-                                       onClose={() => setIsChatOpen(false)} 
-                                   />
+                                        <Chat
+                                            currentUserId={currentUserId.userId}
+                                            recipientId={chatUser.senderId._id === currentUserId.userId ? chatUser.receiverId._id : chatUser.senderId._id}
+                                            onClose={() => setIsChatOpen(false)}
+                                        />
                                     )}
-                                    {/* <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button> */}
                                 </Grid2>
                             </Grid2>
                             {/*    Notification icon */}
                             <Grid2>
                                 <ListItem>
-                                    <Badge
-                                        color="error"
-                                        variant={showNotification ? "dot" : "standard"}
-                                        onClick={() => setShowNotification(false)}
-                                    >
-                                        <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
-                                    </Badge>
-                                    <Snackbar open={showNotification} autoHideDuration={3000}
-                                        onClose={(event, reason) => {
-                                            if (reason !== "clickaway") {
-                                                setShowNotification(false);
-                                            }
-                                        }}>
-                                        <Alert severity="info" onClose={() => setShowNotification(false)}>
-                                            {notification}
-                                        </Alert>
-                                    </Snackbar>
-                                    {/*   {showNotification && (
-                                        <div style={{
-                                            position: "absolute",
-                                            background: "white",
-                                            padding: "10px",
-                                            borderRadius: "5px",
-                                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                                            top: "50px",
-                                            right: "10px",
-                                        }}>
-                                            {notification}
-                                        </div>
-                                    )} */}
+                                    <Grid2>
+                                        <ListItem>
+                                            <Badge
+                                                color="error"
+                                                variant={showNotification ? "dot" : "standard"}
+                                                onClick={() => setShowNotification(!showNotification)} 
+                                            >
+                                                <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
+                                            </Badge>
+
+                                            {/* Snackbar for displaying notifications */}
+                                            <Snackbar
+                                                open={showNotification}
+                                                autoHideDuration={3000}
+                                                onClose={(event, reason) => {
+                                                    if (reason !== "clickaway") {
+                                                        setShowNotification(false);
+                                                    }
+                                                }}
+                                            >
+                                                <Alert severity="info" onClose={() => setShowNotification(false)}>
+                                                    {notification || "New Notification!"}
+                                                </Alert>
+                                            </Snackbar>
+                                        </ListItem>
+                                    </Grid2>
                                 </ListItem>
                             </Grid2>
                             {/*     profile icon */}
