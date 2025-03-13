@@ -55,7 +55,7 @@ export default function Login() {
             window.sessionStorage.setItem("_token", JSON.stringify(data.token));
 
             setTimeout(() => {
-                window.location.href = '/:home';
+                window.location.href = '/home';
                 // navigate("/:home"); 
             }, 1000);
         } else {
