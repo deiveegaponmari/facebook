@@ -41,6 +41,8 @@ export default function Friends({ friendReqUser, selectedUser, setconfirmUser })
     // Use correct variables for senderId and receiverId
     const senderId = friendReqUser._id; // The user who sent the request
     const receiverId = currentId._id; // The logged-in user
+    console.log("senderid",senderId)
+    console.log("receiverid",receiverId)
     axios.post(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/confirm/${senderId}/${receiverId}`)
       .then((response) => {
         console.log("Friend request confirmed:", response.data);

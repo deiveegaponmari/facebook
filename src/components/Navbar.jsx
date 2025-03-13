@@ -1,4 +1,7 @@
-import { Grid2, ListItem, TextField, Autocomplete, Drawer, IconButton, Typography, List, ListItemAvatar, Avatar, ListItemText, Badge } from "@mui/material";
+import {
+    Grid2, ListItem, TextField, Autocomplete, Drawer, IconButton, Typography, List, ListItemAvatar, Avatar,
+    ListItemText, Badge, Snackbar, Alert
+} from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import HomeIcon from '@mui/icons-material/Home';
@@ -16,7 +19,6 @@ import PeopleIcon from '@mui/icons-material/People';
 
 export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser, friendReqUser, confirmUser }) {
     const navigate = useNavigate();
-    //  const [friendlistopen, setfriendlistopen] = useState(false)
     const [newMessage, setNewMessage] = useState(false);
     const [open, setOpen] = useState(false);
     const [friendData, setFriendData] = useState([])
@@ -29,9 +31,10 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
     const { decodedToken, isLoggedIn } = useData();
     const [counter, setCounter] = useState(0);
     const currentUserId = decodedToken || {};
-    const[chatUser,setChatUser]=useState([]);
+    const [chatUser, setChatUser] = useState([]);
+    // const [friendReqUser, setfriendReqUser] = useState([])
     console.log(currentUserId);
-   // console.log("confirmuser", confirmUser)
+
 
     // Fetch all user data for autocomplete
     useEffect(() => {
@@ -47,26 +50,68 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
     //handle socket
     useEffect(() => {
-        socket.on("receiveFriendRequest", ({ senderId }) => {
-            console.log("You received a friend request from:", senderId);
-            setNotification("You have a new friend request!");
-            setShowNotification(true);
-            axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${senderId}`)
-                .then((res) => {
-                    setfriendReqUser(res.data)
-                })
+        socket.emit("registerUser", currentUserId?.userId);
+
+        socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
+            if (receiverId === currentUserId?.userId) {
+                console.log("You received a friend request!");
+                setNotification("You have a new friend request!");
+                setShowNotification(true);
+                /*  axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${senderId}`)
+                     .then((res) => setfriendReqUser(res.data))
+                     .catch(err => console.error(err)); */
+            }
+        });
+
+        socket.on("notification", ({ message, receiverId }) => {
+            if (receiverId === currentUserId?.userId) {
+                /* setNotification(message);
+                setShowNotification(true); */
+                setNotification(message || "New Notification!");
+                setShowNotification(true)
+            }
+        });
+
+        socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
+            if (receiverId === currentUserId?.userId) {
+                console.log("A friend request was canceled!");
+            }
+        });
+
+        socket.on("receive_message", ({ message }) => {
+            console.log("New message received:", message);
+            setNewMessage(true);  // Only showing new message notification
         });
 
         return () => {
             socket.off("receiveFriendRequest");
+            socket.off("notification");
+            socket.off("friendRequestCanceled");
+            socket.off("receive_message");
         };
-    }, []);
-    useEffect(() => {
+    }, [currentUserId]);
+
+    /*  useEffect(() => {
+         socket.on("receiveFriendRequest", ({ senderId }) => {
+             console.log("You received a friend request from:", senderId);
+             setNotification("You have a new friend request!");
+             setShowNotification(true);
+             axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${senderId}`)
+                 .then((res) => {
+                     setfriendReqUser(res.data)
+                 })
+         });
+ 
+         return () => {
+             socket.off("receiveFriendRequest");
+         };
+     }, []); */
+    /* useEffect(() => {
         let intervalId;
         intervalId = setInterval(() => {
-            //handle online users registration
+          
             socket.emit("registerUser", currentUserId?.userId);
-            //handle friend request
+         
             socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
                 console.log("receiverId:-- ", receiverId);
                 console.log("currentUserId.userId:-- ", currentUserId.userId);
@@ -77,12 +122,9 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
             socket.on("notification", ({ message, receiverId }) => {
                 console.log('message :------ message :-- ', message)
-                /* let apiData = [{name:'vvv', image: ''}];
-                console.log("data :-- ",[apiData]); */
+             
                 console.log("receiverId :-- ", receiverId);
-                //api call
-                /*   axios.get("") */
-                //setfriendReqUser(apiData);
+                
                 if (receiverId == currentUserId.userId) {
                     setNotification(message);
                     setShowNotification(true)
@@ -104,52 +146,47 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
 
         return () => clearInterval(intervalId);
-    }, []);
-    //handle user register and friendRequest notification
-    /*  useEffect(() => {
-         socket.emit("registerUser", currentUserId.userId);
- 
-         socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
-             if (receiverId === currentUserId.userId) {
-                 console.log("You received a friend request!");
-             }
-         });
- 
-         socket.on("notification", (message) => {
-             setNotification(message);
-             setShowNotification(true)
-         })
- 
-         socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
-             if (receiverId === currentUserId.userId) {
-                 console.log("A friend request was canceled!");
-             }
-         });
- 
-         return () => {
-             socket.off("receiveFriendRequest");
-             socket.off("friendRequestCanceled");
-         };
-     }, [currentUserId]); */
+    }, []); */
     //handle real time chat notification
-    useEffect(() => {
-        socket.on("receive_message", ({ message }) => {
-            console.log("New message received:", message);
-            setNewMessage(message); // Show notification badge
-        });
-        return () => {
-            socket.off("receive_message");
-        };
-    }, []);
+    /*   useEffect(() => {
+          socket.on("receive_message", ({ message }) => {
+              console.log("New message received:", message);
+              setNewMessage(message); 
+          });
+          return () => {
+              socket.off("receive_message");
+          };
+      }, []); */
     const toggleDrawer = () => setOpen(!open);
 
 
+    /*   function toggleChat(user) {
+          setChatUser(user);
+          setIsChatOpen(true)
+          
+      } */
+  /*   function toggleChat(user) {
+        if (chatUser?._id === user._id) {
+            setIsChatOpen(false);  // Close chat 
+        } else {
+            setChatUser(user);
+            setIsChatOpen(true);
+            setNewMessage(false); // Clear new message notification
+        }
+    } */
     function toggleChat(user) {
-        setChatUser(user);
-        setIsChatOpen(true)
-        // setNewMessage(false);
+        const recipientId = user.senderId._id === currentUserId.userId ? user.receiverId._id : user.senderId._id;
+
+        if (chatUser?._id === recipientId) {
+            setIsChatOpen(false); // Close chat
+        } else {
+            setChatUser(user);
+            setIsChatOpen(true);
+            setNewMessage(false); // Clear new message notification
+        }
     }
-    console.log("chatuser",chatUser.receiverId)
+
+    //console.log("chatuser", chatUser.receiverId)
     // Handle user selection
     const handleUserSelect = (_, value) => {
         if (value) {
@@ -162,14 +199,29 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
         }
     };
 
+    /*  useEffect(() => {
+         axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/accepted/${currentUserId.userId}`)
+             .then(response => {
+                 console.log("Accepted friends:", response.data);
+                 setFriendData(response.data);
+             })
+             .catch(error => console.error("Error fetching accepted friends:", error));
+     }, [currentUserId]); */
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/accepted/${currentUserId.userId}`)
-            .then(response => {
-                console.log("Accepted friends:", response.data);
+        if (!currentUserId?.userId) return;
+
+        const fetchFriends = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/accepted/${currentUserId.userId}`);
                 setFriendData(response.data);
-            })
-            .catch(error => console.error("Error fetching accepted friends:", error));
+            } catch (error) {
+                console.error("Error fetching accepted friends:", error);
+            }
+        };
+
+        fetchFriends();
     }, [currentUserId]);
+
 
 
     return (
@@ -272,9 +324,14 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                         </div>
                                     </Drawer>
                                     {/* Render Chat Component When Chat is Open */}
-                                    
-                                    {isChatOpen && chatUser&& (
-                                        <Chat currentUserId={currentUserId.userId} recipientId={chatUser.receiverId._id} onClose={() => setIsChatOpen(false)} />
+
+                                    {isChatOpen && chatUser && (
+                                       /*  <Chat currentUserId={currentUserId.userId} recipientId={chatUser.receiverId._id} onClose={() => setIsChatOpen(false)} /> */
+                                       <Chat 
+                                       currentUserId={currentUserId.userId} 
+                                       recipientId={chatUser.senderId._id === currentUserId.userId ? chatUser.receiverId._id : chatUser.senderId._id}
+                                       onClose={() => setIsChatOpen(false)} 
+                                   />
                                     )}
                                     {/* <button onClick={toggleChat} style={{ float: "right", marginTop: "10px" }}>Close</button> */}
                                 </Grid2>
@@ -289,7 +346,17 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                     >
                                         <NotificationsIcon sx={{ fontSize: 40 }} color="primary" />
                                     </Badge>
-                                    {showNotification && (
+                                    <Snackbar open={showNotification} autoHideDuration={3000}
+                                        onClose={(event, reason) => {
+                                            if (reason !== "clickaway") {
+                                                setShowNotification(false);
+                                            }
+                                        }}>
+                                        <Alert severity="info" onClose={() => setShowNotification(false)}>
+                                            {notification}
+                                        </Alert>
+                                    </Snackbar>
+                                    {/*   {showNotification && (
                                         <div style={{
                                             position: "absolute",
                                             background: "white",
@@ -301,7 +368,7 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                         }}>
                                             {notification}
                                         </div>
-                                    )}
+                                    )} */}
                                 </ListItem>
                             </Grid2>
                             {/*     profile icon */}
