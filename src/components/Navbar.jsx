@@ -48,6 +48,51 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
             .catch((error) => console.log(error));
     }, []);
 
+    useEffect(() => {
+        let intervalId;
+        intervalId = setInterval(() => {
+
+            socket.emit("registerUser", currentUserId?.userId);
+         
+            socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
+                console.log("llll senderId:-- ", senderId);
+                console.log("llll receiverId:-- ", receiverId);
+                console.log("llll currentUserId.userId:-- ", currentUserId.userId);
+                if (receiverId === currentUserId.userId) {
+                    setfriendReqUser(senderId);
+                    console.log("You received a friend request!");
+                }
+            });
+
+            socket.on("notification", ({ message, receiverId }) => {
+                console.log('message :------ message :-- ', message)
+             
+                console.log("message :-- ", message);
+                console.log("receiverId :-- ", receiverId);
+                
+                if (receiverId == currentUserId.userId) {
+                    setNotification(message);
+                    setShowNotification(true)
+                }
+
+            })
+
+            socket.on("friendRequestCanceled", ({ senderId, receiverId }) => {
+                if (receiverId === currentUserId.userId) {
+                    console.log("A friend request was canceled!");
+                }
+            });
+
+            return () => {
+                socket.off("receiveFriendRequest");
+                socket.off("friendRequestCanceled");
+            };
+        }, 3000);
+
+
+        return () => clearInterval(intervalId);
+    }, [])
+
     //handle socket
     useEffect(() => {
         socket.emit("registerUser", currentUserId?.userId);
@@ -96,11 +141,11 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
     function toggleChat(user) {
         console.log("chatuser", user);
         // Check if user object exists and contains senderId & receiverId
-        if (!user || !user.senderId || !user.receiverId) {
+        if (!user || !user._id) {
             console.error("Invalid user object passed to toggleChat:", user);
             return;
         }
-        const recipientId = user.senderId._id === currentUserId.userId ? user.receiverId._id : user.senderId._id;
+        const recipientId = user._id;
         console.log("Recipient ID:", recipientId);
         if (chatUser?._id === recipientId) {
             setIsChatOpen(false); // Close chat
@@ -221,7 +266,9 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                                 {Array.from(new Map(friendData.map(friend => {
                                                     
                                                     const friendInfo = friend.receiverId._id === currentUserId.userId ? friend.senderId : friend.receiverId;
-                                                    return [friendInfo._id, friendInfo]; 
+                                                    console.log("kkkkkkk friend:-- ", friend)
+                                                    console.log("kkkkkkk friendInfo:-- ", friendInfo)
+                                                    return [friendInfo._id, friendInfo, ]; 
                                                 })).values()).map((friend, index) => (
                                                    
                                                     <ListItem key={index} button onClick={() => toggleChat(friend)}>
@@ -231,6 +278,15 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                                         <ListItemText primary={friend.username} />
                                                     </ListItem>
                                                 ))}
+                                                {/* {friendData.map((friend, index) => (
+                                                   
+                                                    <ListItem key={index} button onClick={() => toggleChat(friend)}>
+                                                        <ListItemAvatar>
+                                                            <Avatar src={friend.senderId.avatar} />
+                                                        </ListItemAvatar>
+                                                        <ListItemText primary={friend.senderId.username} />
+                                                    </ListItem>
+                                                ))} */}
                                             </List>
                                         </div>
                                     </Drawer>
@@ -239,7 +295,7 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
                                     {isChatOpen && chatUser && (
                                         <Chat
                                             currentUserId={currentUserId.userId}
-                                            recipientId={chatUser.senderId._id === currentUserId.userId ? chatUser.receiverId._id : chatUser.senderId._id}
+                                            recipientId={chatUser._id}
                                             onClose={() => setIsChatOpen(false)}
                                         />
                                     )}

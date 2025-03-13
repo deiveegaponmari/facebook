@@ -10,13 +10,14 @@ import axios from 'axios';
 import socket from "../middleware/socket";
 
 export default function Friends({ friendReqUser, selectedUser, setconfirmUser }) {
-  console.log('friendReqUser :p--- ', friendReqUser)
+  console.log('llll friendReqUser :p--- ', friendReqUser)
   //console.log("selected user",selectedUser)
   const { decodedToken } = useData();
   const currentUserId = decodedToken;
   //console.log(currentUserId)
   const [currentId, setCurrentId] = useState([]);
-
+  const [friendRequest, setFriendRequest] = useState([]);
+  console.log("friendrequestdata", friendRequest)
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${currentUserId.userId}/`)
       .then((response) => {
@@ -24,6 +25,14 @@ export default function Friends({ friendReqUser, selectedUser, setconfirmUser })
       })
   }, [currentUserId])
 
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${friendReqUser}/`)
+      .then((response) => {
+        setFriendRequest(response.data)
+      })
+  }, [friendReqUser])
+
+  // need to call 2sec
   useEffect(() => {
     socket.on("receiveFriendRequest", ({ senderId, receiverId }) => {
       if (receiverId === currentId._id) {
@@ -39,10 +48,10 @@ export default function Friends({ friendReqUser, selectedUser, setconfirmUser })
   function handleConfirm() {
     console.log("Confirm clicked");
     // Use correct variables for senderId and receiverId
-    const senderId = friendReqUser._id; // The user who sent the request
+    const senderId = friendRequest._id; // The user who sent the request
     const receiverId = currentId._id; // The logged-in user
-    console.log("senderid",senderId)
-    console.log("receiverid",receiverId)
+    console.log("senderid", senderId)
+    console.log("receiverid", receiverId)
     axios.post(`${import.meta.env.VITE_BACKEND_URL}/friendrequest/confirm/${senderId}/${receiverId}`)
       .then((response) => {
         console.log("Friend request confirmed:", response.data);
@@ -59,12 +68,12 @@ export default function Friends({ friendReqUser, selectedUser, setconfirmUser })
 
       <CardMedia
         sx={{ height: 140 }}
-        image={friendReqUser.avatar}
+        image={friendRequest.avatar}
         title="green iguana"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {friendReqUser.username}
+          {friendRequest.username}
         </Typography>
       </CardContent>
       <CardActions>
