@@ -1,4 +1,4 @@
-import { Grid, Avatar, Button, Typography, Stack, Box } from "@mui/material";
+import { Grid2, Avatar, Button, Typography, Stack, Box } from "@mui/material";
 import PostModal from "./Home/PostModal";
 import CardUpload from "../components/CardUpload";
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ export default function ProfilePage() {
     }, [currentId]);
 
     return (
-        <Grid container direction="column" alignItems="center" spacing={3} sx={{ mt: 4 }}>
+        <Grid2 container direction="column" alignItems="center" spacing={3} sx={{ mt: 4 }}>
             {/* Profile Header */}
             <Stack spacing={2} alignItems="center">
                 <Avatar src={data.avatar} alt={data.username} sx={{ width: 100, height: 100 }} />
@@ -35,6 +35,6 @@ export default function ProfilePage() {
             <Box width="100%" display="flex" justifyContent="center">
                 <CardUpload setUploadFiles={setUploadFiles} uploadFiles={uploadFiles} />
             </Box>
-        </Grid>
+        </Grid2>
     );
 }

@@ -1,146 +1,100 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, Avatar, Typography, CardMedia, CardActions, IconButton, Button, 
-  TextField,Dialog,DialogContent,DialogTitle } from "@mui/material";
+import {
+  Card, CardContent, CardHeader, Avatar, Typography, CardMedia, CardActions, IconButton, Button,
+  TextField, Dialog, DialogContent, DialogTitle
+} from "@mui/material";
 import { Favorite, Share, MoreVert, ChatBubbleOutline } from "@mui/icons-material";
-import { Facebook, Twitter, WhatsApp ,Close} from "@mui/icons-material";
-
+import { Facebook, Twitter, WhatsApp, Close } from "@mui/icons-material";
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import io from "socket.io-client";
 import axios from "axios";
+import { useData } from "../context/data"
 
 const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, { transports: ["websocket"] });
 
-/* const postsData = [
-  {
-    id: 1,
-    username: "vanitha",
-    avatar: "https://images.unsplash.com/photo-1585016495481-91613a3ab1bc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bmF0dXJhbHxlbnwwfHwwfHx8MA%3D%3D",
-    time: "2h ago",
-    content: "Enjoying a great day at the beach!",
-    media: "https://i.pinimg.com/736x/f1/5d/ea/f15deaa797aaa5901d514fde36a51ea9.jpg",
-    type: "image"
-  },
-  {
-    id: 2,
-    username: "Taylor Swift",
-    avatar: "https://images.unsplash.com/photo-1516475429286-465d815a0df7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG5hdHVyYWx8ZW58MHx8MHx8fDA%3D",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
-    type: "video"
-  },
-  {
-    id: 3,
-    username: "Taylor Swift",
-    avatar: "https://plus.unsplash.com/premium_photo-1675127367513-7f4388aa9076?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bmF0dXJhbHxlbnwwfHwwfHx8MA%3D%3D",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bW90aXZhdGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-    type: "image"
-  },
-  {
-    id: 4,
-    username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://plus.unsplash.com/premium_photo-1687067885966-d755107af021?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bW90aXZhdGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-    type: "image"
-  },
-  {
-    id: 5,
-    username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/4763786/4763786-sd_960_506_24fps.mp4",
-    type: "video"
-  },
-  {
-    id: 6,
-    username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://images.unsplash.com/photo-1494178270175-e96de2971df9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bW90aXZhdGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-    type: "image"
-  }, {
-    id: 7,
-    username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
-    type: "video"
-  },
-  {
-    id: 8,
-    username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/4763871/4763871-sd_960_506_24fps.mp4",
-    type: "video"
-  },
-  {
-    id: 9,
-    username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/3971351/3971351-sd_640_360_25fps.mp4",
-    type: "video"
-  },
-  {
-    id: 10,
-    username: "Taylor Swift",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    time: "6d ago",
-    content: "Here’s a sneak peek of my new music video! 🎶",
-    media: "https://videos.pexels.com/video-files/4763474/4763474-sd_640_360_24fps.mp4",
-    type: "video"
-  }
-]; */
 const CardUpload = (props) => {
-  const {  staticData = false } = props;
+  const { staticData = false } = props;
   const [posts, setPosts] = useState([]);
   const [commentData, setCommentData] = useState({}); // Stores comment input for each post
-  const [comments, setComments] = useState({}); // Stores list of comments for each post
   const [notification, setNotification] = useState("");
-   const [sharePost, setSharePost] = useState(null); // Store the post to be shared
+  const [sharePost, setSharePost] = useState(null); // Store the post to be shared
+  const { decodedToken } = useData();
+  const currentUserId = decodedToken.userId;
+  console.log(currentUserId)
+  const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [showInput, setShowInput] = useState(null);
+  const [newComment, setNewComment] = useState("");
+  const [shareModal, setShareModal] = useState(null);
+
 
   useEffect(() => {
-    if(staticData){
+    if (staticData) {
       axios.get(`${import.meta.env.VITE_BACKEND_URL}/newsfeed/data`)
-      .then((response) => setPosts(response.data))
-      .catch((error) => {
-        console.log(error)
-      })
-    } else{
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
         .then((response) => setPosts(response.data))
         .catch((error) => {
           console.log(error)
-          alert("Failed to load stories")
         })
+    } else {
+      /*  axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
+         .then((response) => setPosts(response.data))
+         .catch((error) => {
+           console.log(error)
+           alert("Failed to load stories")
+         })
+     } */
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
+        .then((response) => {
+          setPosts(response.data);
+          // Fetch comments for each post
+          response.data.forEach(post => {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/comment/${post._id}`)
+              .then(res => {
+                setComments(prev => ({
+                  ...prev,
+                  [post._id]: res.data.comments
+                }));
+              })
+              .catch(err => console.error("Error loading comments:", err));
+          });
+        })
+        .catch(error => {
+          console.log(error);
+          alert("Failed to load stories");
+        });
     }
-   
-  }, [staticData])
+  }, [staticData]);
   // Toggle comment input visibility
   const handleCommentClick = (postId) => {
     setCommentData((prev) => ({
       ...prev,
-      [postId]: prev[postId] ? "" : "" // Show/hide input field
+      [postId]: !prev[postId]
     }));
   };
+  /*   const handleCommentClick = async (postId) => {
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/comment/${currentUserId}/${postId}`, { text: newComment });
+    
+        if (response.data.success) {
+          setComments([...comments, response.data.comment]);
+          setNewComment("");
+          socket.emit("comment_post", { postId, comment: response.data.comment });
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+      
+        
+  }; */
 
-/*   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
-        .then((response) => setPosts(response.data))
-        .catch((error) => {
-          console.log(error)
-          alert("Failed to load stories")
-        })
-    }, [staticData]) */
+  /*   useEffect(() => {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/post/getpost`)
+          .then((response) => setPosts(response.data))
+          .catch((error) => {
+            console.log(error)
+            alert("Failed to load stories")
+          })
+      }, [staticData]) */
 
   // Update comment input value
   const handleInputChange = (postId, value) => {
@@ -151,65 +105,152 @@ const CardUpload = (props) => {
   };
 
   // Submit comment and update comment list
-  const handleSendComment = (postId) => {
-    if (!commentData[postId]) return; // Prevent empty comments
+  /*   const handleSendComment = (postId) => {
+      if (!commentData[postId]) return; 
+  
+      setComments((prev) => ({
+        ...prev,
+        [postId]: [...(prev[postId] || []), commentData[postId]] 
+      }));
+  
+      setCommentData((prev) => ({
+        ...prev,
+        [postId]: "" // Clear input field
+      }));
+      const username = "New User";
+      socket.emit("comment_post", { postId, username })
+    }; */
+  /*   const handleSendComment = async (postId) => {
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/comment/${currentUserId}/${postId}`, { text: newComment });
+    
+        if (response.data.success) {
+          setComments([...comments, response.data.comment]);
+          setNewComment("");
+          socket.emit("comment_post", { postId, comment: response.data.comment });
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+    }; */
+  const handleSendComment = async (postId) => {
+    if (!commentData[postId]) return;
 
-    setComments((prev) => ({
-      ...prev,
-      [postId]: [...(prev[postId] || []), commentData[postId]] // Append new comment
-    }));
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/comment/${currentUserId}/${postId}`,
+        { text: commentData[postId] }
+      );
 
-    setCommentData((prev) => ({
-      ...prev,
-      [postId]: "" // Clear input field
-    }));
-    const username = "New User";
-    socket.emit("comment_post", { postId, username })
+      if (response.data.success) {
+        setComments((prev) => ({
+          ...prev,
+          [postId]: [...(prev[postId] || []), response.data.comment]
+        }));
+        setCommentData((prev) => ({
+          ...prev,
+          [postId]: ""
+        }));
+        socket.emit("comment_post", { postId, comment: response.data.comment });
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
   };
-  //handle like button
-  const handlelike = (postId) => {
-    const username = "CurrentUser"; // Replace with logged-in user's name
-    socket.emit("like_post", { postId, username }); // Send like event
+
+  /*   if (!commentData[postId]) return;
+  
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/comment//:userId/:postId`, {
+        currentUserId,
+        postId,
+        comment: commentData[postId],
+        username: "New User", 
+      });
+  
+      if (response.status === 200) {
+       
+        socket.emit("comment_post", { postId, username: "New User" });
+  
+     
+        setComments((prev) => ({
+          ...prev,
+          [postId]: [...(prev[postId] || []), response.data.comment],
+        }));
+  
+      
+        setCommentData((prev) => ({
+          ...prev,
+          [postId]: "",
+        }));
+      }
+    } catch (error) {
+      console.error("Error sending comment:", error);
+    } */
+
+  const handleLike = async (postId) => {
+    console.log("postidddd-------------", postId);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/like/${currentUserId}/${postId}`, { method: "POST" });
+      const data = await response.json();
+      console.log("data----------", data)
+      if (data.success) {
+        setLikes(prevLikes => data.message === "Like counted successfully" ? prevLikes + 1 : prevLikes - 1);
+        socket.emit("like_post", { postId, userId: currentUserId });
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
   };
+
 
   useEffect(() => {
     socket.on("notification", (data) => {
       setNotification(data.message);
     });
 
+    socket.on("new_comment", ({ postId, comment }) => {
+      setComments((prev) => ({
+        ...prev,
+        [postId]: [...(prev[postId] || []), comment]
+      }));
+    });
+  
+
     return () => {
       socket.off("notification");
+      socket.off("new_comment")
     };
   }, [setNotification]);
   //handle share button
-/*   const handleShare = (post) => {
-    const shareUrl = `${window.location.origin}/post/${post.id}`;
-    const shareText = `${post.content}\nCheck it out here: ${shareUrl}`;
-
-    if (navigator.share) {
-      navigator.share({
-        title: post.username,
-        text: shareText,
-        url: shareUrl
-      })
-        .then(() => console.log("Post shared successfully"))
-        .catch((error) => console.log("Error sharing", error));
-    } else {
-      // Fallback: Open share options manually
-      const encodedText = encodeURIComponent(shareText);
-      const encodedUrl = encodeURIComponent(shareUrl);
-
-      const socialLinks = {
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-        twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
-        whatsapp: `https://api.whatsapp.com/send?text=${encodedText}`
-      };
-
-      // Open the share option in a new window/tab
-      window.open(socialLinks.facebook, "_blank");
-    }
-  }; */
- // Handle share button click
+  /*   const handleShare = (post) => {
+      const shareUrl = `${window.location.origin}/post/${post.id}`;
+      const shareText = `${post.content}\nCheck it out here: ${shareUrl}`;
+  
+      if (navigator.share) {
+        navigator.share({
+          title: post.username,
+          text: shareText,
+          url: shareUrl
+        })
+          .then(() => console.log("Post shared successfully"))
+          .catch((error) => console.log("Error sharing", error));
+      } else {
+        // Fallback: Open share options manually
+        const encodedText = encodeURIComponent(shareText);
+        const encodedUrl = encodeURIComponent(shareUrl);
+  
+        const socialLinks = {
+          facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+          twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
+          whatsapp: `https://api.whatsapp.com/send?text=${encodedText}`
+        };
+  
+        // Open the share option in a new window/tab
+        window.open(socialLinks.facebook, "_blank");
+      }
+    }; */
+  // Handle share button click
   const handleShareClick = (post) => {
     setSharePost(post); // Open the share modal
   };
@@ -230,7 +271,7 @@ const CardUpload = (props) => {
   };
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20 }}>
-      {posts.map((post,index) => (
+      {posts.map((post, index) => (
         <Card key={`${index}-${post.id}`} style={{ marginBottom: 20 }}>
           <CardHeader
             avatar={<Avatar src={post.avatar} />}
@@ -247,29 +288,30 @@ const CardUpload = (props) => {
             <CardMedia component="video" controls height="300" src={post.media} />
           )}
           <CardActions>
-            <IconButton onClick={() => handlelike(post.id)}><Favorite /></IconButton>
-            <IconButton onClick={() => handleCommentClick(post.id)}>
+            <IconButton onClick={() => handleLike(post._id)}><ThumbUpOffAltIcon /></IconButton>
+            <Typography>{likes} Likes</Typography>
+            <IconButton onClick={() => handleCommentClick(post._id)}>
               <ChatBubbleOutline />
             </IconButton>
-            <IconButton onClick={() =>  handleShareClick(post)} ><Share /></IconButton>
+            <IconButton onClick={() => handleShareClick(post)} ><Share /></IconButton>
           </CardActions>
 
           {/* Comment Input Box - Show when clicking "Comment" */}
-          {commentData.hasOwnProperty(post.id) && (
+          {commentData.hasOwnProperty(post._id) && (
             <div style={{ padding: "10px 16px", display: "flex", alignItems: "center" }}>
               <TextField
                 fullWidth
                 size="small"
                 variant="outlined"
                 placeholder="Write a comment..."
-                value={commentData[post.id]}
-                onChange={(e) => handleInputChange(post.id, e.target.value)}
+                value={commentData[post._id]}
+                onChange={(e) => handleInputChange(post._id, e.target.value)}
               />
               <Button
                 variant="contained"
                 color="primary"
                 style={{ marginLeft: 10 }}
-                onClick={() => handleSendComment(post.id)}
+                onClick={() => handleSendComment(post._id)}
               >
                 Send
               </Button>
@@ -277,10 +319,10 @@ const CardUpload = (props) => {
           )}
 
           {/* Render Comments */}
-          {comments[post.id]?.length > 0 && (
+          {comments[post._id]?.length > 0 && (
             <div style={{ padding: "10px 16px" }}>
               <Typography variant="subtitle2">Comments:</Typography>
-              {comments[post.id].map((comment, index) => (
+              {comments[post._id].map((comment, index) => (
                 <Typography key={index} style={{ marginTop: 5 }}>
                   • {comment}
                 </Typography>
@@ -289,28 +331,28 @@ const CardUpload = (props) => {
           )}
         </Card>
       ))}
-{/* open social media icons from share button after click */}
-     <div>
-      <Dialog open={Boolean(sharePost)} onClose={() => setSharePost(null)}>
-        <DialogTitle>
-          Share Post
-          <IconButton onClick={() => setSharePost(null)} style={{ float: "right" }}>
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent style={{ display: "flex", justifyContent: "center", gap: "20px", padding: "20px" }}>
-          <IconButton onClick={() => handleShareToPlatform("facebook", sharePost)}>
-            <Facebook color="primary" fontSize="large" />
-          </IconButton>
-          <IconButton onClick={() => handleShareToPlatform("twitter", sharePost)}>
-            <Twitter color="primary" fontSize="large" />
-          </IconButton>
-          <IconButton onClick={() => handleShareToPlatform("whatsapp", sharePost)}>
-            <WhatsApp color="primary" fontSize="large" />
-          </IconButton>
-        </DialogContent>
-      </Dialog>
-    </div>
+      {/* open social media icons from share button after click */}
+      <div>
+        <Dialog open={Boolean(sharePost)} onClose={() => setSharePost(null)}>
+          <DialogTitle>
+            Share Post
+            <IconButton onClick={() => setSharePost(null)} style={{ float: "right" }}>
+              <Close />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent style={{ display: "flex", justifyContent: "center", gap: "20px", padding: "20px" }}>
+            <IconButton onClick={() => handleShareToPlatform("facebook", sharePost)}>
+              <Facebook color="primary" fontSize="large" />
+            </IconButton>
+            <IconButton onClick={() => handleShareToPlatform("twitter", sharePost)}>
+              <Twitter color="primary" fontSize="large" />
+            </IconButton>
+            <IconButton onClick={() => handleShareToPlatform("whatsapp", sharePost)}>
+              <WhatsApp color="primary" fontSize="large" />
+            </IconButton>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

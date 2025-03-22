@@ -188,8 +188,7 @@ export default function Navbar({ setSelectedUser, selectedUser, setfriendReqUser
 
         fetchFriends();
     }, [currentUserId]);
-
-
+      
 
     return (
         <Grid2>
